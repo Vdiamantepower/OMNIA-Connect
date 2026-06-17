@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMNIA Connect – Prototype</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue: #0072CE;
+    --blue-dark: #005BAC;
+    --blue-light: #E8F3FC;
+    --blue-muted: #4A90D9;
+    --text: #1A1A2E;
+    --text-muted: #6B7280;
+    --border: #D1D5DB;
+    --bg: #F9FAFB;
+    --white: #FFFFFF;
+    --sidebar-w: 220px;
+    --header-h: 52px;
+    --shadow: 0 1px 4px rgba(0,0,0,0.10);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.12);
+    --radius: 8px;
+    --radius-sm: 5px;
+  }
+
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; }
+
+  /* ── HEADER ── */
+  .header {
+    position: fixed; top: 0; left: 0; right: 0; height: var(--header-h);
+    background: var(--white); border-bottom: 1.5px solid var(--blue);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 20px; z-index: 100; gap: 16px;
+  }
+  .header-brand { display: flex; align-items: center; gap: 10px; }
+  .header-logo {
+    width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--blue);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 10px; color: var(--blue); letter-spacing: -0.5px;
+  }
+  .header-app { font-weight: 700; font-size: 16px; color: var(--text); }
+  .header-supplier { color: var(--blue); font-weight: 600; font-size: 15px; flex: 1; text-align: center; }
+  .header-right { display: flex; align-items: center; gap: 18px; color: var(--text-muted); }
+  .header-right svg { width:18px; height:18px; }
+  .header-user { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; color: var(--blue); font-weight: 500; }
+  .header-apps { cursor: pointer; opacity: 0.7; }
+  .header-apps:hover { opacity: 1; }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    position: fixed; top: var(--header-h); left: 0; bottom: 0;
+    width: var(--sidebar-w); background: var(--white);
+    border-right: 1px solid var(--border); overflow-y: auto; z-index: 90;
+    padding: 14px 0;
+  }
+  .sidebar-back {
+    display: flex; align-items: center; gap: 6px; padding: 4px 18px 12px;
+    color: var(--blue); cursor: pointer; font-size: 13px;
+  }
+  .sidebar-back:hover { text-decoration: underline; }
+  .nav-item {
+    display: flex; align-items: center; gap: 9px;
+    padding: 8px 18px; cursor: pointer; color: var(--text); font-size: 13px;
+    transition: background 0.15s;
+  }
+  .nav-item:hover { background: var(--blue-light); color: var(--blue); }
+  .nav-item.active { color: var(--blue); font-weight: 600; background: var(--blue-light); }
+  .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+  .nav-item.sub { padding-left: 36px; }
+  .nav-section {
+    padding: 10px 18px 4px; font-size: 11px; font-weight: 700;
+    text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.6px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .nav-section svg { width: 14px; height: 14px; }
+
+  /* ── MAIN ── */
+  .main {
+    margin-left: var(--sidebar-w); margin-top: var(--header-h);
+    min-height: calc(100vh - var(--header-h)); padding: 28px 32px;
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ── PAGE TITLE ── */
+  .page-title { font-size: 20px; font-weight: 700; color: var(--blue); margin-bottom: 20px; }
+  .page-subtitle { font-size: 18px; font-weight: 600; color: var(--blue); margin-bottom: 24px; text-align: center; }
+
+  /* ── SEARCH FILTERS ROW ── */
+  .filter-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; }
+  .filter-select {
+    appearance: none; background: var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236B7280'/%3E%3C/svg%3E") no-repeat right 10px center;
+    border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    padding: 8px 28px 8px 12px; font-size: 13px; cursor: pointer; min-width: 140px;
+    transition: border-color 0.15s;
+  }
+  .filter-select:focus { outline: none; border-color: var(--blue); }
+  .filter-select:hover { border-color: var(--blue-muted); }
+  .btn {
+    padding: 8px 22px; border-radius: var(--radius-sm); font-size: 13px;
+    font-weight: 600; cursor: pointer; border: none; transition: background 0.15s, transform 0.1s;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary { background: var(--blue); color: var(--white); }
+  .btn-primary:hover { background: var(--blue-dark); }
+  .btn-outline { background: var(--white); color: var(--text); border: 1.5px solid var(--border); }
+  .btn-outline:hover { border-color: var(--blue); color: var(--blue); }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--white); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 18px; box-shadow: var(--shadow);
+  }
+  .card-title { font-size: 15px; font-weight: 700; color: var(--blue); margin-bottom: 10px; }
+
+  /* ── HOME PAGE ── */
+  .home-search-box { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 28px; box-shadow: var(--shadow); }
+  .saved-section { margin-bottom: 28px; }
+  .saved-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .saved-header-title { font-size: 15px; font-weight: 700; color: var(--blue); }
+  .saved-header a { color: var(--blue); font-size: 13px; }
+  .saved-item {
+    background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 12px 16px; margin-bottom: 8px; display: flex; align-items: center;
+    justify-content: space-between; cursor: pointer; transition: box-shadow 0.15s;
+  }
+  .saved-item:hover { box-shadow: var(--shadow-md); border-color: var(--blue); }
+  .saved-item-name { font-size: 13px; font-weight: 500; color: var(--blue); }
+  .saved-item-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .saved-actions { display: flex; gap: 10px; color: var(--text-muted); }
+  .saved-actions svg { width: 15px; height: 15px; cursor: pointer; }
+  .saved-actions svg:hover { color: var(--blue); }
+
+  .bulletin-box {
+    background: var(--white); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 20px; min-height: 120px; margin-bottom: 28px; box-shadow: var(--shadow);
+  }
+  .bulletin-content { color: var(--text-muted); font-size: 13px; line-height: 1.6; margin-top: 10px; }
+
+  .support-card {
+    background: var(--white); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 16px 20px; display: flex; align-items: center; gap: 16px; margin-bottom: 28px; box-shadow: var(--shadow);
+  }
+  .support-avatar {
+    width: 44px; height: 44px; border-radius: 50%; background: var(--blue-light);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    border: 2px solid var(--blue);
+  }
+  .support-avatar svg { width: 24px; height: 24px; color: var(--blue); }
+  .support-info { flex: 1; }
+  .support-name { font-weight: 700; font-size: 14px; }
+  .support-title { font-size: 12px; color: var(--text-muted); }
+  .support-contact { display: flex; gap: 24px; margin-top: 4px; }
+  .support-contact a { font-size: 12px; color: var(--blue); text-decoration: none; }
+  .support-contact a:hover { text-decoration: underline; }
+
+  .resources-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .resource-card {
+    background: var(--white); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 16px; min-height: 90px; cursor: pointer; transition: box-shadow 0.15s, border-color 0.15s;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .resource-card:hover { box-shadow: var(--shadow-md); border-color: var(--blue); }
+  .resource-card-title { font-size: 13px; font-weight: 600; color: var(--text); }
+  .resource-card-desc { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+  /* ── SALES COMPASS ── */
+  .compass-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 680px; margin: 0 auto; }
+  .compass-tile {
+    background: var(--white); border: 1.5px solid var(--border); border-radius: var(--radius);
+    padding: 40px 24px; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 14px; cursor: pointer; min-height: 160px;
+    transition: box-shadow 0.2s, border-color 0.2s, transform 0.15s;
+    text-align: center;
+  }
+  .compass-tile:hover { box-shadow: var(--shadow-md); border-color: var(--blue); transform: translateY(-2px); }
+  .compass-tile svg { width: 32px; height: 32px; color: var(--blue); }
+  .compass-tile-label { font-size: 15px; font-weight: 700; color: var(--blue); }
+
+  /* ── ORG SEARCH RESULTS ── */
+  .results-toolbar {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;
+  }
+  .results-count-box {
+    display: flex; align-items: center; gap: 8px; background: var(--white);
+    border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    padding: 8px 16px; font-size: 13px; font-weight: 500; cursor: pointer;
+    flex: 1; max-width: 320px;
+  }
+  .results-count-box svg { width: 14px; height: 14px; color: var(--text-muted); margin-left: auto; }
+  .toolbar-spacer { flex: 1; }
+  .inline-link { background: none; border: none; color: var(--blue); font-size: 13px; cursor: pointer; text-decoration: underline; }
+  .inline-link:hover { color: var(--blue-dark); }
+
+  .filter-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+  .filter-chip {
+    appearance: none; background: var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236B7280'/%3E%3C/svg%3E") no-repeat right 8px center;
+    border: 1.5px solid var(--border); border-radius: 20px;
+    padding: 5px 24px 5px 10px; font-size: 12px; cursor: pointer; color: var(--text);
+    transition: border-color 0.15s;
+  }
+  .filter-chip:focus { outline: none; border-color: var(--blue); }
+  .filter-chip.active-filter { border-color: var(--blue); background-color: var(--blue-light); color: var(--blue); }
+  .filter-actions { display: flex; align-items: center; justify-content: flex-end; gap: 20px; margin-bottom: 12px; }
+
+  /* ── DATA TABLE ── */
+  .data-table-wrap { background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; box-shadow: var(--shadow); }
+  .data-table { width: 100%; border-collapse: collapse; }
+  .data-table thead tr { background: #111827; color: var(--white); }
+  .data-table th { padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; letter-spacing: 0.3px; white-space: nowrap; }
+  .data-table td { padding: 11px 16px; font-size: 13px; border-bottom: 1px solid #F1F5F9; vertical-align: middle; }
+  .data-table tbody tr { cursor: pointer; transition: background 0.1s; }
+  .data-table tbody tr:hover { background: var(--blue-light); }
+  .data-table tbody tr:last-child td { border-bottom: none; }
+  .org-name { color: var(--blue); font-weight: 600; }
+  .badge {
+    display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;
+  }
+  .badge-green { background: #D1FAE5; color: #065F46; }
+  .badge-yellow { background: #FEF3C7; color: #92400E; }
+  .badge-red { background: #FEE2E2; color: #991B1B; }
+  .badge-blue { background: var(--blue-light); color: var(--blue); }
+  .badge-gray { background: #F3F4F6; color: #4B5563; }
+
+  /* ── ORG DETAILS ── */
+  .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .details-grid-3 { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .detail-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 2px; letter-spacing: 0.4px; }
+  .detail-value { font-size: 13px; color: var(--text); }
+  .detail-value.bold { font-weight: 700; }
+  .detail-value.blue { color: var(--blue); }
+  .detail-row { display: flex; flex-direction: column; gap: 2px; }
+  .detail-kv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 24px; }
+  .accordion {
+    background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    margin-bottom: 10px; overflow: hidden;
+  }
+  .accordion-header {
+    padding: 14px 18px; font-size: 14px; font-weight: 600; cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between;
+    user-select: none;
+  }
+  .accordion-header:hover { background: var(--blue-light); }
+  .accordion-header svg { width: 16px; height: 16px; color: var(--blue); transition: transform 0.2s; }
+  .accordion-header.open svg { transform: rotate(90deg); }
+  .accordion-body { padding: 0 18px 16px; display: none; }
+  .accordion-body.open { display: block; }
+
+  /* ── CONTACTS TABLE (inside accordion) ── */
+  .contacts-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
+  .contacts-table th { background: #F9FAFB; border-bottom: 2px solid var(--border); padding: 8px 12px; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); }
+  .contacts-table td { padding: 10px 12px; border-bottom: 1px solid #F1F5F9; }
+  .contacts-table tr:last-child td { border-bottom: none; }
+
+  /* ── CONTRACT SEARCH ── */
+  .contract-list { max-width: 600px; }
+  .contract-item {
+    background: var(--white); border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    padding: 16px 20px; margin-bottom: 12px; display: flex; align-items: center;
+    justify-content: space-between; cursor: pointer; transition: box-shadow 0.15s, border-color 0.15s;
+  }
+  .contract-item:hover { box-shadow: var(--shadow-md); border-color: var(--blue); }
+  .contract-name { font-size: 14px; font-weight: 600; color: var(--blue); }
+  .contract-meta { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+  .contract-item svg { width: 16px; height: 16px; color: var(--blue); }
+
+  /* ── MEMBERSHIP STATUS ── */
+  .membership-form { max-width: 680px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px; }
+  .form-group label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--blue); margin-bottom: 8px; }
+  .form-input {
+    width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    font-size: 14px; transition: border-color 0.15s;
+  }
+  .form-input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(0,114,206,0.1); }
+  .form-input::placeholder { color: #C4C9D4; }
+  .form-actions { display: flex; justify-content: flex-end; gap: 12px; }
+
+  /* ── SEARCH PREFERENCES ── */
+  .prefs-layout { display: grid; grid-template-columns: 1fr 380px; gap: 24px; }
+  .prefs-question { margin-bottom: 24px; }
+  .prefs-question-label { font-size: 14px; font-weight: 600; color: var(--blue); margin-bottom: 10px; }
+  .prefs-options { display: flex; flex-direction: column; gap: 8px; }
+  .prefs-option {
+    background: var(--white); border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    padding: 10px 16px; cursor: pointer; font-size: 13px; transition: border-color 0.15s, background 0.15s;
+  }
+  .prefs-option:hover { border-color: var(--blue); background: var(--blue-light); }
+  .prefs-option.selected { border-color: var(--blue); background: var(--blue-light); color: var(--blue); font-weight: 600; }
+  .prefs-summary { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; position: sticky; top: 80px; }
+  .prefs-summary-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+  .prefs-summary-item { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 14px; margin-bottom: 8px; font-size: 13px; color: var(--text); }
+  .prefs-goto { display: block; width: 100%; text-align: center; color: var(--blue); font-size: 13px; font-weight: 600; cursor: pointer; margin-top: 14px; text-decoration: underline; }
+
+  /* ── COLUMN SELECTOR ── */
+  .col-selector-btn {
+    width: 100%; background: var(--white); border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    padding: 11px 16px; display: flex; align-items: center; justify-content: space-between;
+    cursor: pointer; font-size: 13px; font-weight: 500; color: var(--text);
+    transition: border-color 0.15s;
+  }
+  .col-selector-btn:hover { border-color: var(--blue); }
+  .col-selector-btn svg { width: 16px; height: 16px; color: var(--blue); }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed; bottom: 24px; right: 24px; background: #1A1A2E; color: var(--white);
+    padding: 12px 20px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500;
+    box-shadow: var(--shadow-md); z-index: 999; opacity: 0; transform: translateY(10px);
+    transition: opacity 0.3s, transform 0.3s; pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* ── MEMBERSHIP RESULTS ── */
+  .membership-result-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 12px; box-shadow: var(--shadow); }
+  .membership-result-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+  .status-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .status-item .status-label { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-bottom: 4px; }
+  .status-item .status-value { font-size: 13px; font-weight: 600; }
+
+  /* ── BREADCRUMB / BACK ── */
+  .back-btn { display: inline-flex; align-items: center; gap: 6px; color: var(--blue); cursor: pointer; font-size: 13px; margin-bottom: 20px; }
+  .back-btn:hover { text-decoration: underline; }
+  .back-btn svg { width: 16px; height: 16px; }
+
+  /* ── SHARE DROPDOWN ── */
+  .share-dropdown {
+    position: fixed; background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--radius); box-shadow: var(--shadow-md); z-index: 200;
+    min-width: 280px; overflow: hidden; display: none;
+  }
+  .share-dropdown.open { display: block; }
+  .share-option {
+    padding: 12px 18px; font-size: 13px; cursor: pointer; transition: background 0.12s;
+  }
+  .share-option:hover { background: var(--blue-light); color: var(--blue); }
+  .share-option + .share-option { border-top: 1px solid #F1F5F9; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* ── RESPONSIVE hint ── */
+  .chip-tag { display: inline-block; background: var(--blue-light); color: var(--blue); border-radius: 12px; padding: 2px 8px; font-size: 11px; font-weight: 600; }
+
+  /* ── ORG SEARCH PREFERENCES ── */
+  .org-prefs-form { max-width: 780px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-brand">
+    <div class="header-logo">OMP</div>
+    <span class="header-app">Connect</span>
+  </div>
+  <div class="header-supplier" id="headerSupplier">Supplier Name</div>
+  <div class="header-right">
+    <span class="header-apps" title="Apps">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h4v4H4zm6 0h4v4h-4zm6 0h4v4h-4zM4 12h4v4H4zm6 0h4v4h-4zm6 0h4v4h-4zM4 18h4v4H4zm6 0h4v4h-4zm6 0h4v4h-4z"/></svg>
+    </span>
+    <div class="header-user">
+      <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v2h20v-2c0-3.3-6.7-5-10-5z"/></svg>
+      First Last Name
+      <svg viewBox="0 0 24 24" fill="currentColor" style="width:12px;height:12px"><path d="M7 10l5 5 5-5z"/></svg>
+    </div>
+    <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px;color:var(--blue-muted)"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6V11c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+  </div>
+</header>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-back" onclick="goBack()">
+    <svg viewBox="0 0 24 24" fill="currentColor" style="width:14px;height:14px"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+  </div>
+  <div class="nav-item" onclick="navigate('home')" id="nav-home">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    Home
+  </div>
+  <div class="nav-item sub" onclick="navigate('sales-compass')" id="nav-sales-compass">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5.5-2.5l7.51-3.49L17.5 6.5 9.99 9.99 6.5 17.5zm5.5-6.6c.61 0 1.1.49 1.1 1.1s-.49 1.1-1.1 1.1-1.1-.49-1.1-1.1.49-1.1 1.1-1.1z"/></svg>
+    Sales Compass
+  </div>
+  <div class="nav-item sub" onclick="navigate('saved-searches')" id="nav-saved-searches">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.27 2 8.5 2 5.41 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.08C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.41 22 8.5c0 3.77-3.4 6.86-8.55 11.53L12 21.35z"/></svg>
+    Saved Searches
+  </div>
+  <div class="nav-section">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+    Prospecting
+  </div>
+  <div class="nav-item sub" onclick="navigate('org-search')" id="nav-org-search">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg>
+    Public Organizations
+  </div>
+  <div class="nav-item sub" onclick="navigate('contact-search')" id="nav-contact-search">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+    Public Contacts
+  </div>
+  <div class="nav-item sub" id="nav-private-orgs">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-2.18c.07-.44.18-.88.18-1.34C18 2.54 15.96.5 13.4.5c-1.32 0-2.5.52-3.4 1.36C9.1 1.02 7.92.5 6.6.5 4.04.5 2 2.54 2 5.16c0 .46.11.9.18 1.34H0v14h20V6zm-7.6-3.5c1.26 0 2.3 1.08 2.3 2.16 0 .45-.5.84-1.1.84H14v-.34c0-1.26-.5-2.38-1.28-3.2.22-.33.52-.46.68-.46zm-5.8 0c.16 0 .46.13.68.46C6.5 3.78 6 4.9 6 6.16V6.5h-.6c-.6 0-1.1-.39-1.1-.84 0-1.08 1.04-2.16 2.3-2.16zM2 18V8h8v10H2zm10 0V8h8v10h-8z"/></svg>
+    Private Organizations
+  </div>
+  <div class="nav-section">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+    Planning
+  </div>
+  <div class="nav-item sub" id="nav-learning">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L1 9l4 2.18V15c0 3 3.58 5 7 5s7-2 7-5v-3.82L22 9 12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99c0 1.1-2.25 3.01-5 3.01s-5-1.9-5-3V13.27l5 2.73 5-2.73v2.72z"/></svg>
+    Learning
+  </div>
+  <div class="nav-item sub" onclick="navigate('membership-status')" id="nav-membership-status">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+    Membership Status
+  </div>
+  <div class="nav-item sub" id="nav-supplier-insights">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+    Supplier Insights
+  </div>
+  <div class="nav-item sub" id="nav-branding">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+    Branding &amp; Marketing
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+  <!-- ══════════════════ HOME ══════════════════ -->
+  <div id="screen-home" class="screen active">
+    <div class="home-search-box">
+      <div class="filter-row">
+        <select class="filter-select">
+          <option>Organization</option>
+          <option>All IN Good Taste Catering</option>
+          <option>Acme School Supplies</option>
+          <option>Metro Transit Authority</option>
+        </select>
+        <select class="filter-select">
+          <option>Location</option>
+          <option>Texas</option>
+          <option>California</option>
+          <option>New York</option>
+          <option>Florida</option>
+        </select>
+        <select class="filter-select">
+          <option>Market Segment</option>
+          <option>K-12 Education</option>
+          <option>Higher Education</option>
+          <option>State &amp; Local Gov</option>
+          <option>Healthcare</option>
+        </select>
+        <select class="filter-select">
+          <option>Engagement Score</option>
+          <option>High</option>
+          <option>Medium</option>
+          <option>Low</option>
+          <option>Idle</option>
+        </select>
+        <button class="btn btn-primary" onclick="navigate('org-search')">Search</button>
+      </div>
+      <div class="filter-row">
+        <select class="filter-select">
+          <option>Contact Name</option>
+          <option>John Smith</option>
+          <option>Maria Garcia</option>
+          <option>David Lee</option>
+        </select>
+        <select class="filter-select">
+          <option>Department</option>
+          <option>Finance</option>
+          <option>Procurement</option>
+          <option>IT</option>
+          <option>Administration</option>
+        </select>
+        <select class="filter-select">
+          <option>Role</option>
+          <option>Decision Maker</option>
+          <option>Influencer</option>
+          <option>User</option>
+        </select>
+        <select class="filter-select">
+          <option>Areas of Interest</option>
+          <option>Technology</option>
+          <option>Facilities</option>
+          <option>Food Services</option>
+          <option>Professional Services</option>
+        </select>
+        <button class="btn btn-outline" onclick="clearFilters()">Clear All</button>
+      </div>
+    </div>
+
+    <div class="saved-section">
+      <div class="saved-header">
+        <span class="saved-header-title">Saved Searches (3)</span>
+        <a href="#" onclick="navigate('saved-searches');return false;">→ View All</a>
+      </div>
+      <div class="saved-item" onclick="navigate('org-search')">
+        <div>
+          <div class="saved-item-name">K-12 Texas – High Engagement</div>
+          <div class="saved-item-meta">Organizations · Last run: Jun 14, 2026 · 342 results</div>
+        </div>
+        <div class="saved-actions">
+          <svg viewBox="0 0 24 24" fill="currentColor" title="Share" onclick="openShare(event)" style="cursor:pointer"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11A2.99 2.99 0 0018 8c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor" title="Delete" onclick="showToast('Search deleted')" style="cursor:pointer"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+        </div>
+      </div>
+      <div class="saved-item" onclick="navigate('org-search')">
+        <div>
+          <div class="saved-item-name">Healthcare – New Members – Southwest</div>
+          <div class="saved-item-meta">Organizations · Last run: Jun 10, 2026 · 128 results</div>
+        </div>
+        <div class="saved-actions">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11A2.99 2.99 0 0018 8c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+        </div>
+      </div>
+      <div class="saved-item" onclick="navigate('contact-search')">
+        <div>
+          <div class="saved-item-name">Procurement Contacts – California</div>
+          <div class="saved-item-meta">Contacts · Last run: Jun 5, 2026 · 87 results</div>
+        </div>
+        <div class="saved-actions">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11A2.99 2.99 0 0018 8c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="saved-section">
+      <div class="saved-header"><span class="saved-header-title">Supplier Bulletin Board</span></div>
+      <div class="bulletin-box">
+        <div class="bulletin-content">
+          <p><strong>📢 June 2026 Update:</strong> New contract opportunities available in the K-12 and Higher Education segments. Members in Texas, California, and Florida are showing increased purchasing activity this quarter.</p>
+          <p style="margin-top:10px"><strong>Reminder:</strong> Q2 supplier performance reviews begin July 1. Please ensure your product catalog and pricing are up to date in the portal.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="saved-section">
+      <div class="saved-header"><span class="saved-header-title">Supplier Support</span></div>
+      <div class="support-card">
+        <div class="support-avatar">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        </div>
+        <div class="support-info">
+          <div class="support-name">Patrick Garrett</div>
+          <div class="support-title">OMNIA Partners Sales Resource</div>
+          <div class="support-contact">
+            <a href="#">patrick.garrett@omniapartners.com</a>
+            <a href="#">+1 (800) 555-0142</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="saved-section">
+      <div class="saved-header"><span class="saved-header-title">Resources</span></div>
+      <div class="resources-grid">
+        <div class="resource-card">
+          <div class="resource-card-title">Contract Overview Guide</div>
+          <div class="resource-card-desc">Quick reference for navigating member contracts and OMNIA Partners agreements.</div>
+        </div>
+        <div class="resource-card">
+          <div class="resource-card-title">Sales Playbook 2026</div>
+          <div class="resource-card-desc">Updated strategies and talking points for public sector procurement conversations.</div>
+        </div>
+        <div class="resource-card">
+          <div class="resource-card-title">Member Engagement Toolkit</div>
+          <div class="resource-card-desc">Templates, email scripts, and outreach materials for member engagement campaigns.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ SALES COMPASS ══════════════════ -->
+  <div id="screen-sales-compass" class="screen">
+    <div class="back-btn" onclick="navigate('home')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      Back
+    </div>
+    <p class="page-subtitle">Where is your sales compass pointing today? — Set your course for today's goals</p>
+    <div class="compass-grid">
+      <div class="compass-tile" onclick="navigate('contact-search')">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        <span class="compass-tile-label">Find Contacts</span>
+      </div>
+      <div class="compass-tile" onclick="navigate('org-search-prefs')">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg>
+        <span class="compass-tile-label">Find Organizations</span>
+      </div>
+      <div class="compass-tile" onclick="navigate('contracts')">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+        <span class="compass-tile-label">View Contracts</span>
+      </div>
+      <div class="compass-tile" onclick="navigate('membership-status')">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+        <span class="compass-tile-label">Find Membership Status</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ ORG SEARCH RESULTS ══════════════════ -->
+  <div id="screen-org-search" class="screen">
+    <div class="back-btn" onclick="navigate('home')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      Back
+    </div>
+    <div class="page-title">Organization Search Results</div>
+    <div class="results-toolbar">
+      <div class="results-count-box">
+        10,000 Organizations Displayed — 10,078 Found
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+      </div>
+      <div class="toolbar-spacer"></div>
+      <button class="btn btn-outline" style="display:flex;align-items:center;gap:6px;">
+        My Saved Searches
+        <svg viewBox="0 0 24 24" fill="currentColor" style="width:12px;height:12px"><path d="M7 10l5 5 5-5z"/></svg>
+      </button>
+      <button class="btn btn-outline" onclick="showToast('Export started — check your email shortly')">Export</button>
+    </div>
+    <div class="filter-chips">
+      <select class="filter-chip active-filter"><option>Organization</option></select>
+      <select class="filter-chip"><option>City</option><option>Dallas</option><option>Austin</option><option>Houston</option></select>
+      <select class="filter-chip"><option>County</option></select>
+      <select class="filter-chip active-filter"><option>3 States Selected ✓</option><option>Texas</option><option>California</option><option>Florida</option></select>
+      <select class="filter-chip"><option>Zip Code</option></select>
+      <select class="filter-chip"><option>Market Segment</option><option>K-12 Education</option><option>Higher Education</option><option>Healthcare</option></select>
+      <select class="filter-chip"><option>MS Sub-type</option></select>
+      <select class="filter-chip"><option>Size Band</option><option>(A) &lt;300K</option><option>(B) 600K-1.2M</option><option>(C) 1.2M-3M</option><option>(D) &gt;3M</option></select>
+      <select class="filter-chip"><option>Engagement Score</option><option>High</option><option>Medium</option><option>Low</option><option>Idle</option></select>
+      <select class="filter-chip"><option>Significant Capital</option><option>Yes</option><option>No</option></select>
+      <select class="filter-chip"><option>Remaining Potential</option></select>
+    </div>
+    <div class="filter-actions">
+      <button class="inline-link" onclick="clearFilters()">Clear Filters</button>
+      <button class="inline-link" onclick="showToast('Search saved!')">Save Search</button>
+    </div>
+    <div class="data-table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Organization</th>
+            <th>Market Segment</th>
+            <th>State</th>
+            <th>Engagement Score</th>
+            <th>Size Band</th>
+            <th>Remaining Potential</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr onclick="navigate('org-details')">
+            <td><span class="org-name">All IN Good Taste Catering</span><br><small style="color:var(--text-muted)">Force ID: 866795 · Richardson, TX</small></td>
+            <td>K-12 Education</td>
+            <td>TX</td>
+            <td><span class="badge badge-yellow">Idle</span></td>
+            <td>(B) 600–1.2K</td>
+            <td>N/A</td>
+          </tr>
+          <tr onclick="navigate('org-details')">
+            <td><span class="org-name">Austin Independent School District</span><br><small style="color:var(--text-muted)">Force ID: 712340 · Austin, TX</small></td>
+            <td>K-12 Education</td>
+            <td>TX</td>
+            <td><span class="badge badge-green">High</span></td>
+            <td>(D) &gt;3M</td>
+            <td>$240,000</td>
+          </tr>
+          <tr onclick="navigate('org-details')">
+            <td><span class="org-name">UC San Diego Health System</span><br><small style="color:var(--text-muted)">Force ID: 548921 · San Diego, CA</small></td>
+            <td>Healthcare</td>
+            <td>CA</td>
+            <td><span class="badge badge-blue">Medium</span></td>
+            <td>(C) 1.2M–3M</td>
+            <td>$87,500</td>
+          </tr>
+          <tr onclick="navigate('org-details')">
+            <td><span class="org-name">Miami-Dade County Schools</span><br><small style="color:var(--text-muted)">Force ID: 634100 · Miami, FL</small></td>
+            <td>K-12 Education</td>
+            <td>FL</td>
+            <td><span class="badge badge-green">High</span></td>
+            <td>(D) &gt;3M</td>
+            <td>$510,000</td>
+          </tr>
+          <tr onclick="navigate('org-details')">
+            <td><span class="org-name">Dallas Area Rapid Transit</span><br><small style="color:var(--text-muted)">Force ID: 789003 · Dallas, TX</small></td>
+            <td>State &amp; Local Gov</td>
+            <td>TX</td>
+            <td><span class="badge badge-red">Low</span></td>
+            <td>(B) 600–1.2K</td>
+            <td>$32,000</td>
+          </tr>
+          <tr onclick="navigate('org-details')">
+            <td><span class="org-name">Houston Community College</span><br><small style="color:var(--text-muted)">Force ID: 901244 · Houston, TX</small></td>
+            <td>Higher Education</td>
+            <td>TX</td>
+            <td><span class="badge badge-blue">Medium</span></td>
+            <td>(C) 1.2M–3M</td>
+            <td>$145,000</td>
+          </tr>
+          <tr onclick="navigate('org-details')">
+            <td><span class="org-name">City of Anaheim</span><br><small style="color:var(--text-muted)">Force ID: 456789 · Anaheim, CA</small></td>
+            <td>State &amp; Local Gov</td>
+            <td>CA</td>
+            <td><span class="badge badge-green">High</span></td>
+            <td>(C) 1.2M–3M</td>
+            <td>$198,000</td>
+          </tr>
+          <tr onclick="navigate('org-details')">
+            <td><span class="org-name">Hillsborough County School Board</span><br><small style="color:var(--text-muted)">Force ID: 334512 · Tampa, FL</small></td>
+            <td>K-12 Education</td>
+            <td>FL</td>
+            <td><span class="badge badge-yellow">Idle</span></td>
+            <td>(D) &gt;3M</td>
+            <td>N/A</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════════════ ORG DETAILS ══════════════════ -->
+  <div id="screen-org-details" class="screen">
+    <div class="back-btn" onclick="navigate('org-search')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      Back to Results
+    </div>
+
+    <div class="details-grid">
+      <div class="card">
+        <div style="font-size:16px;font-weight:700;margin-bottom:10px;">All IN Good Taste Catering</div>
+        <div style="font-size:13px;color:var(--text-muted);line-height:1.8;">
+          Force ID: 866795<br>
+          TAX ID: —<br>
+          2800 Custer Pkwy, Richardson, TX 75080<br>
+          <span>OMNIA Partners Sales Resource: <a href="#" style="color:var(--blue)">Patrick Garrett</a> — patrick.garrett@omniapartners.com</span>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="card" style="cursor:pointer" onclick="navigate('contracts')">
+          <div class="card-title">Supplier Sales</div>
+          <div style="font-size:22px;font-weight:700;color:var(--text);margin-top:4px;">$0</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">LTM through May 2026</div>
+        </div>
+        <div class="card" style="cursor:pointer" onclick="navigate('contracts')">
+          <div class="card-title">Organization Contracts</div>
+          <div style="font-size:22px;font-weight:700;color:var(--text);margin-top:4px;">0</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Active contracts</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="details-grid" style="margin-top:16px;">
+      <div class="card">
+        <div class="detail-kv-grid">
+          <div class="detail-row">
+            <div class="detail-label">Market Segment</div>
+            <div class="detail-value bold">K-12 Education</div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Spend Path</div>
+            <div class="detail-value">No</div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Engagement Score</div>
+            <div class="detail-value"><span class="badge badge-yellow">Idle</span></div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">OPUS Access</div>
+            <div class="detail-value">No</div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Parent Contracts LTM</div>
+            <div class="detail-value">0</div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Size Band</div>
+            <div class="detail-value">(B) 600 – 1.2K</div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Significant Capital</div>
+            <div class="detail-value">No</div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Remaining Potential</div>
+            <div class="detail-value">N/A</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Supplier Activity</div>
+        <div class="detail-row" style="margin-bottom:10px;">
+          <div class="detail-label">Specific Supplier Contracts Used</div>
+          <div class="detail-value">None on record</div>
+        </div>
+        <div class="detail-row" style="margin-bottom:10px;">
+          <div class="detail-label">OPUS Known Sales for Supplier</div>
+          <div class="detail-value">$0</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Last Purchase from Supplier</div>
+          <div class="detail-value">No record</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="details-grid" style="margin-top:16px;">
+      <div class="card">
+        <div class="card-title">Member Scored Card — vs. Others in BLOC</div>
+        <div style="display:flex;gap:20px;margin-top:8px;">
+          <div style="flex:1;">
+            <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;">Percentile Rank</div>
+            <div style="font-size:28px;font-weight:800;color:var(--blue);">42<span style="font-size:14px;font-weight:400;">nd</span></div>
+            <div style="font-size:11px;color:var(--text-muted);">within K-12 TX BLOC</div>
+          </div>
+          <div style="flex:1;">
+            <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;">Score</div>
+            <div style="font-size:28px;font-weight:800;color:var(--blue-muted);">38<span style="font-size:14px;font-weight:400;">/100</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Member Health Insights</div>
+        <div class="detail-row" style="margin-bottom:10px;">
+          <div class="detail-label">Temperature</div>
+          <div class="detail-value"><span class="badge badge-yellow">Lukewarm</span> — Low recent activity</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Buying Trends</div>
+          <div class="detail-value">Last OMNIA Partners contract purchase: <strong>Q3 2024</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:16px;">
+      <div class="accordion">
+        <div class="accordion-header" id="acc-contacts-header" onclick="toggleAccordion('acc-contacts')">
+          Contacts
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+        </div>
+        <div class="accordion-body" id="acc-contacts">
+          <table class="contacts-table">
+            <thead><tr><th>Name</th><th>Title</th><th>Department</th><th>Email</th><th>Phone</th></tr></thead>
+            <tbody>
+              <tr><td>Maria Torres</td><td>Director of Procurement</td><td>Procurement</td><td><a href="#" style="color:var(--blue)">m.torres@aigt.org</a></td><td>(972) 555-0181</td></tr>
+              <tr><td>James Patel</td><td>CFO</td><td>Finance</td><td><a href="#" style="color:var(--blue)">j.patel@aigt.org</a></td><td>(972) 555-0192</td></tr>
+              <tr><td>Sarah Kim</td><td>Operations Manager</td><td>Operations</td><td><a href="#" style="color:var(--blue)">s.kim@aigt.org</a></td><td>(972) 555-0203</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="accordion">
+        <div class="accordion-header" id="acc-locations-header" onclick="toggleAccordion('acc-locations')">
+          Child Locations
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+        </div>
+        <div class="accordion-body" id="acc-locations">
+          <table class="contacts-table">
+            <thead><tr><th>Location Name</th><th>Address</th><th>City</th><th>State</th><th>Zip</th></tr></thead>
+            <tbody>
+              <tr><td>Richardson Main Campus</td><td>2800 Custer Pkwy</td><td>Richardson</td><td>TX</td><td>75080</td></tr>
+              <tr><td>North Dallas Kitchen</td><td>4100 Forest Ln</td><td>Dallas</td><td>TX</td><td>75244</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ CONTRACTS ══════════════════ -->
+  <div id="screen-contracts" class="screen">
+    <div class="back-btn" onclick="navigate('org-details')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      Back
+    </div>
+    <div class="page-title">My Contracts</div>
+    <div class="contract-list">
+      <div class="contract-item" onclick="navigate('contract-detail')">
+        <div>
+          <div class="contract-name">Technology Products &amp; Services — Master Agreement</div>
+          <div class="contract-meta">Contract #: MA-2024-0041 · Expires: Dec 31, 2026 · <span class="badge badge-green">Active</span></div>
+        </div>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+      </div>
+      <div class="contract-item" onclick="navigate('contract-detail')">
+        <div>
+          <div class="contract-name">Office Supplies &amp; Paper Products — National Contract</div>
+          <div class="contract-meta">Contract #: NC-2023-0118 · Expires: Jun 30, 2027 · <span class="badge badge-green">Active</span></div>
+        </div>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+      </div>
+      <div class="contract-item" onclick="navigate('contract-detail')">
+        <div>
+          <div class="contract-name">Food Service Equipment — Cooperative Agreement</div>
+          <div class="contract-meta">Contract #: CA-2022-0055 · Expires: Mar 31, 2025 · <span class="badge badge-red">Expired</span></div>
+        </div>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ CONTACT SEARCH ══════════════════ -->
+  <div id="screen-contact-search" class="screen">
+    <div class="back-btn" onclick="navigate('home')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      Back
+    </div>
+    <div class="page-title">Contact Search Preferences</div>
+    <div class="prefs-layout">
+      <div>
+        <div class="prefs-question">
+          <div class="prefs-question-label">What is your primary goal for this search?</div>
+          <div class="prefs-options">
+            <div class="prefs-option selected" onclick="selectPref(this, 'goal-summary', 'New Outreach')">New Outreach — find contacts I haven't engaged yet</div>
+            <div class="prefs-option" onclick="selectPref(this, 'goal-summary', 'Re-engagement')">Re-engagement — reconnect with lapsed contacts</div>
+            <div class="prefs-option" onclick="selectPref(this, 'goal-summary', 'Contract Follow-up')">Contract Follow-up — contacts tied to active contracts</div>
+          </div>
+        </div>
+        <div class="prefs-question">
+          <div class="prefs-question-label">Which market segment should we focus on?</div>
+          <div class="prefs-options">
+            <div class="prefs-option selected" onclick="selectPref(this, 'segment-summary', 'K-12 Education')">K-12 Education</div>
+            <div class="prefs-option" onclick="selectPref(this, 'segment-summary', 'Higher Education')">Higher Education</div>
+            <div class="prefs-option" onclick="selectPref(this, 'segment-summary', 'State &amp; Local Gov')">State &amp; Local Government</div>
+            <div class="prefs-option" onclick="selectPref(this, 'segment-summary', 'Healthcare')">Healthcare</div>
+          </div>
+        </div>
+        <div class="prefs-question">
+          <div class="prefs-question-label">Column Selector</div>
+          <button class="col-selector-btn" onclick="showToast('Column selector coming soon')">
+            Choose columns to display in results
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="prefs-summary">
+        <div class="prefs-summary-title">
+          Preference Summary
+          <button class="inline-link" onclick="showToast('Preferences saved!')">Save Preferences</button>
+        </div>
+        <div class="prefs-summary-item" id="goal-summary">New Outreach</div>
+        <div class="prefs-summary-item" id="segment-summary">K-12 Education</div>
+        <div class="prefs-summary-item" id="col-summary">Default Columns</div>
+        <span class="prefs-goto" onclick="navigate('contact-results')">Go to Contact Search →</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ CONTACT RESULTS ══════════════════ -->
+  <div id="screen-contact-results" class="screen">
+    <div class="back-btn" onclick="navigate('contact-search')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      Back to Preferences
+    </div>
+    <div class="page-title">Contact Search Results</div>
+    <div class="results-toolbar">
+      <div class="results-count-box">
+        87 Contacts Found — K-12 Education
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+      </div>
+      <div class="toolbar-spacer"></div>
+      <button class="btn btn-outline" onclick="showToast('Export started')">Export</button>
+    </div>
+    <div class="filter-chips" style="margin-bottom:16px;">
+      <select class="filter-chip active-filter"><option>K-12 Education ✓</option></select>
+      <select class="filter-chip"><option>State</option><option>Texas</option><option>California</option><option>Florida</option></select>
+      <select class="filter-chip"><option>Department</option><option>Procurement</option><option>Finance</option><option>IT</option></select>
+      <select class="filter-chip"><option>Role</option><option>Decision Maker</option><option>Influencer</option></select>
+    </div>
+    <div class="data-table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr><th>Name</th><th>Organization</th><th>Title</th><th>Department</th><th>State</th><th>Email</th></tr>
+        </thead>
+        <tbody>
+          <tr onclick="showToast('Contact details coming soon')"><td><span class="org-name">Maria Torres</span></td><td>All IN Good Taste Catering</td><td>Dir. of Procurement</td><td>Procurement</td><td>TX</td><td>m.torres@aigt.org</td></tr>
+          <tr onclick="showToast('Contact details coming soon')"><td><span class="org-name">David Chen</span></td><td>Austin ISD</td><td>VP Purchasing</td><td>Procurement</td><td>TX</td><td>d.chen@austinisd.org</td></tr>
+          <tr onclick="showToast('Contact details coming soon')"><td><span class="org-name">Rebecca Okafor</span></td><td>Miami-Dade County Schools</td><td>CFO</td><td>Finance</td><td>FL</td><td>r.okafor@mdcps.net</td></tr>
+          <tr onclick="showToast('Contact details coming soon')"><td><span class="org-name">Tom Nguyen</span></td><td>Hillsborough Co. School Board</td><td>Procurement Officer</td><td>Procurement</td><td>FL</td><td>t.nguyen@hcps.net</td></tr>
+          <tr onclick="showToast('Contact details coming soon')"><td><span class="org-name">Angela Wright</span></td><td>Houston Community College</td><td>Purchasing Manager</td><td>Finance</td><td>TX</td><td>a.wright@hccs.edu</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════════════ SAVED SEARCHES ══════════════════ -->
+  <div id="screen-saved-searches" class="screen">
+    <div class="back-btn" onclick="navigate('home')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      Back
+    </div>
+    <div class="page-title">Saved Searches</div>
+    <div class="home-search-box" style="margin-bottom:24px;">
+      <div class="filter-row">
+        <select class="filter-select"><option>Organization</option></select>
+        <select class="filter-select"><option>Location</option></select>
+        <select class="filter-select"><option>Market Segment</option></select>
+        <select class="filter-select"><option>Engagement Score</option></select>
+        <button class="btn btn-primary" onclick="navigate('org-search')">Search</button>
+      </div>
+      <div class="filter-row">
+        <select class="filter-select"><option>Contact Name</option></select>
+        <select class="filter-select"><option>Department</option></select>
+        <select class="filter-select"><option>Role</option></select>
+        <select class="filter-select"><option>Areas of Interest</option></select>
+        <button class="btn btn-outline">Clear All</button>
+      </div>
+    </div>
+    <div class="saved-section">
+      <div class="saved-header">
+        <span class="saved-header-title">Saved Searches (3)</span>
+      </div>
+      <div class="saved-item" onclick="navigate('org-search')">
+        <div>
+          <div class="saved-item-name">K-12 Texas – High Engagement</div>
+          <div class="saved-item-meta">Organizations · Created Jun 1, 2026 · Last run Jun 14, 2026 · 342 results</div>
+        </div>
+        <div class="saved-actions">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11A2.99 2.99 0 0018 8c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+        </div>
+      </div>
+      <div class="saved-item" onclick="navigate('org-search')">
+        <div>
+          <div class="saved-item-name">Healthcare – New Members – Southwest</div>
+          <div class="saved-item-meta">Organizations · Created May 20, 2026 · Last run Jun 10, 2026 · 128 results</div>
+        </div>
+        <div class="saved-actions">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11A2.99 2.99 0 0018 8c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+        </div>
+      </div>
+      <div class="saved-item" onclick="navigate('contact-results')">
+        <div>
+          <div class="saved-item-name">Procurement Contacts – California</div>
+          <div class="saved-item-meta">Contacts · Created May 10, 2026 · Last run Jun 5, 2026 · 87 results</div>
+        </div>
+        <div class="saved-actions">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11A2.99 2.99 0 0018 8c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ MEMBERSHIP STATUS ══════════════════ -->
+  <div id="screen-membership-status" class="screen">
+    <div class="back-btn" onclick="navigate('home')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      Back
+    </div>
+    <div class="page-title">Membership Status</div>
+    <div class="membership-form">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Organization</label>
+          <input type="text" class="form-input" placeholder="Customer Name" id="membership-org" value="">
+        </div>
+        <div class="form-group">
+          <label>Location</label>
+          <input type="text" class="form-input" placeholder="Zip Code" id="membership-zip" value="">
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-outline" onclick="navigate('home')">Cancel</button>
+        <button class="btn btn-primary" onclick="searchMembership()">Search</button>
+      </div>
+    </div>
+    <div id="membership-results" style="display:none;margin-top:28px;">
+      <div class="data-table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Force ID</th>
+              <th>Name</th>
+              <th>Status</th>
+              <th>Application Date</th>
+              <th>Market Segment</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr onclick="navigate('org-details')" style="cursor:pointer">
+              <td>15467811</td>
+              <td><span class="org-name" id="mem-result-name">All IN Good Taste Catering</span><br><small style="color:var(--text-muted)">Richardson, TX 75080</small></td>
+              <td><span class="badge badge-green">Accepted</span></td>
+              <td>Jan 15, 2019</td>
+              <td>K-12 Education</td>
+            </tr>
+            <tr onclick="showToast('Organization not in OMNIA system')">
+              <td>N/A</td>
+              <td><span style="color:var(--text-muted)">No match found</span></td>
+              <td><span class="badge badge-red">Declined</span></td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ ORG SEARCH PREFERENCES ══════════════════ -->
+  <div id="screen-org-search-prefs" class="screen">
+    <div class="back-btn" onclick="navigate('sales-compass')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      Back to Sales Compass
+    </div>
+    <div class="page-title">Organization Search Preferences</div>
+    <div class="prefs-layout">
+      <div>
+        <div class="prefs-question">
+          <div class="prefs-question-label">What is your primary sales goal?</div>
+          <div class="prefs-options">
+            <div class="prefs-option selected" onclick="selectPref(this, 'org-goal-summary', 'New Prospects')">New Prospects — find organizations not yet using my contract</div>
+            <div class="prefs-option" onclick="selectPref(this, 'org-goal-summary', 'Re-engage Idle Members')">Re-engage Idle Members — orgs that have gone quiet</div>
+            <div class="prefs-option" onclick="selectPref(this, 'org-goal-summary', 'Expand Existing Accounts')">Expand Existing Accounts — grow spend in current members</div>
+          </div>
+        </div>
+        <div class="prefs-question">
+          <div class="prefs-question-label">Which market segment should we focus on?</div>
+          <div class="prefs-options">
+            <div class="prefs-option selected" onclick="selectPref(this, 'org-segment-summary', 'K-12 Education')">K-12 Education</div>
+            <div class="prefs-option" onclick="selectPref(this, 'org-segment-summary', 'Higher Education')">Higher Education</div>
+            <div class="prefs-option" onclick="selectPref(this, 'org-segment-summary', 'State &amp; Local Gov')">State &amp; Local Government</div>
+            <div class="prefs-option" onclick="selectPref(this, 'org-segment-summary', 'Healthcare')">Healthcare</div>
+          </div>
+        </div>
+        <div class="prefs-question">
+          <div class="prefs-question-label">What organization size are you targeting?</div>
+          <div class="prefs-options">
+            <div class="prefs-option" onclick="selectPref(this, 'org-size-summary', 'Small — under $300K')">Small — under $300K spend</div>
+            <div class="prefs-option selected" onclick="selectPref(this, 'org-size-summary', 'Mid — $600K–$3M')">Mid — $600K to $3M spend</div>
+            <div class="prefs-option" onclick="selectPref(this, 'org-size-summary', 'Large — over $3M')">Large — over $3M spend</div>
+            <div class="prefs-option" onclick="selectPref(this, 'org-size-summary', 'All sizes')">All sizes</div>
+          </div>
+        </div>
+        <div class="prefs-question">
+          <div class="prefs-question-label">Which engagement levels should we include?</div>
+          <div class="prefs-options">
+            <div class="prefs-option selected" onclick="selectPref(this, 'org-engagement-summary', 'Highly Engaged + Active')">Highly Engaged &amp; Active — ready to buy</div>
+            <div class="prefs-option" onclick="selectPref(this, 'org-engagement-summary', 'Somewhat Engaged')">Somewhat Engaged — warming up</div>
+            <div class="prefs-option" onclick="selectPref(this, 'org-engagement-summary', 'Idle / Less Engaged')">Idle / Less Engaged — re-activation opportunities</div>
+            <div class="prefs-option" onclick="selectPref(this, 'org-engagement-summary', 'All engagement levels')">All engagement levels</div>
+          </div>
+        </div>
+        <div class="prefs-question">
+          <div class="prefs-question-label">Column Selector</div>
+          <button class="col-selector-btn" onclick="showToast('Column selector coming soon')">
+            Choose columns to display in results
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="prefs-summary">
+        <div class="prefs-summary-title">
+          Preference Summary
+          <button class="inline-link" onclick="showToast('Preferences saved!')">Save</button>
+        </div>
+        <div class="prefs-summary-item" id="org-goal-summary">New Prospects</div>
+        <div class="prefs-summary-item" id="org-segment-summary">K-12 Education</div>
+        <div class="prefs-summary-item" id="org-size-summary">Mid — $600K–$3M</div>
+        <div class="prefs-summary-item" id="org-engagement-summary">Highly Engaged + Active</div>
+        <div class="prefs-summary-item">Default Columns</div>
+        <span class="prefs-goto" onclick="navigate('org-search')">Go to Organization Search →</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ CONTRACT DETAIL ══════════════════ -->
+  <div id="screen-contract-detail" class="screen">
+    <div class="back-btn" onclick="navigate('contracts')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      Back to Contracts
+    </div>
+
+    <!-- Contract header -->
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
+      <div>
+        <div style="font-size:20px;font-weight:700;color:var(--text);margin-bottom:6px;">Technology Products &amp; Services — Master Agreement</div>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--text-muted);">
+          <span>Contract #: MA-2024-0041</span>
+          <span>Effective: Jan 1, 2024</span>
+          <span>Expires: Dec 31, 2026</span>
+          <span><span class="badge badge-green">Active</span></span>
+        </div>
+      </div>
+      <button class="btn btn-outline" onclick="showToast('Contract document downloading...')">Download PDF</button>
+    </div>
+
+    <!-- KPI row -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;">
+      <div class="card" style="text-align:center;">
+        <div class="detail-label" style="margin-bottom:6px;">Member Organizations Using</div>
+        <div style="font-size:28px;font-weight:800;color:var(--blue);">1,247</div>
+        <div style="font-size:11px;color:#22C55E;margin-top:2px;">▲ 14% vs prior year</div>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div class="detail-label" style="margin-bottom:6px;">LTM Supplier Sales</div>
+        <div style="font-size:28px;font-weight:800;color:var(--blue);">$4.2M</div>
+        <div style="font-size:11px;color:#22C55E;margin-top:2px;">▲ 8% vs prior year</div>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div class="detail-label" style="margin-bottom:6px;">Avg. Spend per Member</div>
+        <div style="font-size:28px;font-weight:800;color:var(--blue);">$3,368</div>
+        <div style="font-size:11px;color:#EF4444;margin-top:2px;">▼ 5% vs prior year</div>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div class="detail-label" style="margin-bottom:6px;">OPUS-Enabled Members</div>
+        <div style="font-size:28px;font-weight:800;color:var(--blue);">342</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">27% of total</div>
+      </div>
+    </div>
+
+    <!-- Insights + breakdown -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+      <div class="card">
+        <div class="card-title">Sales Trend — Last 12 Months</div>
+        <div style="margin-top:12px;">
+          <!-- Simple bar chart representation -->
+          <div style="display:flex;align-items:flex-end;gap:6px;height:80px;">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="background:var(--blue-light);width:100%;height:45px;border-radius:3px 3px 0 0;"></div><div style="font-size:9px;color:var(--text-muted)">Jul</div></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="background:var(--blue-light);width:100%;height:55px;border-radius:3px 3px 0 0;"></div><div style="font-size:9px;color:var(--text-muted)">Aug</div></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="background:var(--blue-light);width:100%;height:40px;border-radius:3px 3px 0 0;"></div><div style="font-size:9px;color:var(--text-muted)">Sep</div></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="background:var(--blue);width:100%;height:65px;border-radius:3px 3px 0 0;"></div><div style="font-size:9px;color:var(--text-muted)">Oct</div></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="background:var(--blue);width:100%;height:70px;border-radius:3px 3px 0 0;"></div><div style="font-size:9px;color:var(--text-muted)">Nov</div></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="background:var(--blue);width:100%;height:75px;border-radius:3px 3px 0 0;"></div><div style="font-size:9px;color:var(--text-muted)">Dec</div></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="background:var(--blue-light);width:100%;height:50px;border-radius:3px 3px 0 0;"></div><div style="font-size:9px;color:var(--text-muted)">Jan</div></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="background:var(--blue-light);width:100%;height:48px;border-radius:3px 3px 0 0;"></div><div style="font-size:9px;color:var(--text-muted)">Feb</div></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="background:var(--blue);width:100%;height:60px;border-radius:3px 3px 0 0;"></div><div style="font-size:9px;color:var(--text-muted)">Mar</div></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="background:var(--blue);width:100%;height:68px;border-radius:3px 3px 0 0;"></div><div style="font-size:9px;color:var(--text-muted)">Apr</div></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="background:var(--blue);width:100%;height:72px;border-radius:3px 3px 0 0;"></div><div style="font-size:9px;color:var(--text-muted)">May</div></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="background:var(--blue);width:100%;height:80px;border-radius:3px 3px 0 0;"></div><div style="font-size:9px;color:var(--text-muted)">Jun</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Adoption by Market Segment</div>
+        <div style="margin-top:10px;display:flex;flex-direction:column;gap:10px;">
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>K-12 Education</span><span style="font-weight:600;">48% · 600 orgs</span></div>
+            <div style="background:#F1F5F9;border-radius:4px;height:8px;"><div style="background:var(--blue);width:48%;height:100%;border-radius:4px;"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>State &amp; Local Gov</span><span style="font-weight:600;">22% · 274 orgs</span></div>
+            <div style="background:#F1F5F9;border-radius:4px;height:8px;"><div style="background:var(--blue-muted);width:22%;height:100%;border-radius:4px;"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Higher Education</span><span style="font-weight:600;">18% · 224 orgs</span></div>
+            <div style="background:#F1F5F9;border-radius:4px;height:8px;"><div style="background:var(--blue-muted);width:18%;height:100%;border-radius:4px;"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Healthcare</span><span style="font-weight:600;">12% · 149 orgs</span></div>
+            <div style="background:#F1F5F9;border-radius:4px;height:8px;"><div style="background:var(--blue-light);width:12%;height:100%;border-radius:4px;border:1px solid var(--blue-muted);"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Member health + opportunities -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+      <div class="card">
+        <div class="card-title">Top Opportunities on This Contract</div>
+        <div style="margin-top:8px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #F1F5F9;cursor:pointer;" onclick="navigate('org-details')">
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--blue)">Austin ISD</div>
+              <div style="font-size:11px;color:var(--text-muted)">K-12 · TX · Highly Engaged</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:13px;font-weight:700;color:#22C55E">$240K potential</div>
+              <div style="font-size:11px;color:var(--text-muted)">0 contracts used LTM</div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #F1F5F9;cursor:pointer;" onclick="navigate('org-details')">
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--blue)">Miami-Dade County Schools</div>
+              <div style="font-size:11px;color:var(--text-muted)">K-12 · FL · Highly Engaged</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:13px;font-weight:700;color:#22C55E">$510K potential</div>
+              <div style="font-size:11px;color:var(--text-muted)">2 contracts used LTM</div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;cursor:pointer;" onclick="navigate('org-details')">
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--blue)">City of Anaheim</div>
+              <div style="font-size:11px;color:var(--text-muted)">State &amp; Local · CA · Highly Engaged</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:13px;font-weight:700;color:#22C55E">$198K potential</div>
+              <div style="font-size:11px;color:var(--text-muted)">1 contract used LTM</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Member Health on This Contract</div>
+        <div style="margin-top:10px;display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--blue-light);border-radius:var(--radius-sm);">
+            <span style="font-size:13px;">Highly Engaged</span>
+            <span style="font-weight:700;color:var(--blue)">412 orgs</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:10px 12px;background:#FEF3C7;border-radius:var(--radius-sm);">
+            <span style="font-size:13px;">Somewhat Engaged</span>
+            <span style="font-weight:700;color:#92400E">518 orgs</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:10px 12px;background:#FEE2E2;border-radius:var(--radius-sm);">
+            <span style="font-size:13px;">Idle / Less Engaged</span>
+            <span style="font-weight:700;color:#991B1B">317 orgs</span>
+          </div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">317 idle members represent significant re-engagement opportunity</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- View Similar Organizations CTA -->
+    <div style="background:linear-gradient(135deg,var(--blue) 0%,var(--blue-dark) 100%);border-radius:var(--radius);padding:24px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+      <div>
+        <div style="color:var(--white);font-size:16px;font-weight:700;margin-bottom:4px;">Find More Organizations Like These</div>
+        <div style="color:rgba(255,255,255,0.8);font-size:13px;">Search for public-sector organizations with similar profiles — size, segment, and engagement — who aren't yet using this contract.</div>
+      </div>
+      <button class="btn" style="background:var(--white);color:var(--blue);font-weight:700;padding:12px 28px;white-space:nowrap;" onclick="navigate('org-search')">
+        View Similar Organizations →
+      </button>
+    </div>
+  </div>
+
+</main>
+
+<!-- SHARE DROPDOWN -->
+<div class="share-dropdown" id="shareDropdown">
+  <div class="share-option" onclick="closeShare();showToast('Set as default for all users')">Make Default Search for All Users</div>
+  <div class="share-option" onclick="closeShare();showToast('Set as default for selected users')">Make Default Search for User Selection</div>
+  <div class="share-option" onclick="closeShare();showToast('Made only available for all users')">Make Only Available Search for All Users</div>
+  <div class="share-option" onclick="closeShare();showToast('Made only available for user selection')">Make Only Available Search for User Selection</div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  let currentScreen = 'home';
+  const prevScreens = [];
+
+  const screenNavMap = {
+    'home': 'nav-home',
+    'sales-compass': 'nav-sales-compass',
+    'saved-searches': 'nav-saved-searches',
+    'org-search': 'nav-org-search',
+    'org-search-prefs': 'nav-org-search',
+    'org-details': 'nav-org-search',
+    'contracts': 'nav-org-search',
+    'contract-detail': 'nav-org-search',
+    'contact-search': 'nav-contact-search',
+    'contact-results': 'nav-contact-search',
+    'membership-status': 'nav-membership-status',
+  };
+
+  const screenTitles = {
+    'home': 'Supplier Name',
+    'sales-compass': 'Supplier Name',
+    'org-search': 'Supplier Name',
+    'org-search-prefs': 'Supplier Name',
+    'org-details': 'All IN Good Taste Catering',
+    'contracts': 'All IN Good Taste Catering',
+    'contract-detail': 'All IN Good Taste Catering',
+    'contact-search': 'Supplier Name',
+    'contact-results': 'Supplier Name',
+    'saved-searches': 'Supplier Name',
+    'membership-status': 'Supplier Name',
+  };
+
+  function navigate(screen) {
+    prevScreens.push(currentScreen);
+
+    // Hide all screens
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+    // Show target screen
+    const el = document.getElementById('screen-' + screen);
+    if (el) el.classList.add('active');
+
+    // Highlight nav
+    const navId = screenNavMap[screen];
+    if (navId) document.getElementById(navId)?.classList.add('active');
+
+    // Update header
+    document.getElementById('headerSupplier').textContent = screenTitles[screen] || 'Supplier Name';
+
+    currentScreen = screen;
+    window.scrollTo(0, 0);
+  }
+
+  function goBack() {
+    if (prevScreens.length > 0) {
+      const prev = prevScreens.pop();
+      navigate(prev);
+      prevScreens.pop(); // navigate pushes again, so remove that duplicate
+    }
+  }
+
+  function clearFilters() {
+    document.querySelectorAll('.filter-select, .filter-chip').forEach(sel => { sel.selectedIndex = 0; });
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active-filter'));
+    showToast('Filters cleared');
+  }
+
+  function toggleAccordion(id) {
+    const body = document.getElementById(id);
+    const header = document.getElementById(id + '-header');
+    const isOpen = body.classList.contains('open');
+    body.classList.toggle('open', !isOpen);
+    header.classList.toggle('open', !isOpen);
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(window._toastTimer);
+    window._toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  function selectPref(el, summaryId, value) {
+    el.closest('.prefs-options').querySelectorAll('.prefs-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    const summary = document.getElementById(summaryId);
+    if (summary) summary.textContent = value;
+  }
+
+  function searchMembership() {
+    const org = document.getElementById('membership-org').value.trim();
+    const results = document.getElementById('membership-results');
+    const nameEl = document.getElementById('mem-result-name');
+    nameEl.textContent = org || 'All IN Good Taste Catering';
+    results.style.display = 'block';
+    results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function openShare(event) {
+    event.stopPropagation();
+    const dd = document.getElementById('shareDropdown');
+    const rect = event.currentTarget.getBoundingClientRect();
+    dd.style.top = (rect.bottom + window.scrollY + 4) + 'px';
+    dd.style.left = (rect.left - 240 + window.scrollX) + 'px';
+    dd.classList.add('open');
+  }
+
+  function closeShare() {
+    document.getElementById('shareDropdown').classList.remove('open');
+  }
+
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('#shareDropdown')) closeShare();
+  });
+</script>
+
+</body>
+</html>
