@@ -206,6 +206,15 @@
   .filter-chip:focus { outline: none; border-color: var(--blue); }
   .filter-chip.active-filter { border-color: var(--blue); background-color: var(--blue-light); color: var(--blue); }
   .filter-actions { display: flex; align-items: center; justify-content: flex-end; gap: 20px; margin-bottom: 12px; }
+  .filter-pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--blue-light); color: var(--blue);
+    font-size: 12px; font-weight: 500;
+    padding: 4px 10px; border-radius: 999px;
+    border: 1px solid rgba(0,114,206,0.25);
+    cursor: pointer; user-select: none;
+  }
+  .filter-pill:hover { background: #d0e8f8; }
 
   /* ── DATA TABLE ── */
   .data-table-wrap { background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; box-shadow: var(--shadow); }
@@ -613,34 +622,88 @@
       Back
     </div>
     <div class="page-title">Organization Search Results</div>
-    <div class="results-toolbar">
+
+    <!-- ── Search bar ── -->
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;">
+      <!-- Top row: search input + filter toggle + actions -->
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:200px;display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;color:var(--text-muted);flex-shrink:0;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" placeholder="Search organizations..." style="border:none;background:transparent;outline:none;font-size:14px;color:var(--text);width:100%;" />
+        </div>
+        <button id="filter-toggle-btn" onclick="toggleOrgFilterPanel()" style="display:inline-flex;align-items:center;gap:6px;background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 14px;font-size:14px;color:var(--text);cursor:pointer;white-space:nowrap;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+          Filters
+          <span id="filter-badge" style="background:var(--blue);color:var(--white);font-size:11px;font-weight:600;padding:1px 7px;border-radius:999px;">3</span>
+        </button>
+        <button class="btn btn-outline" style="display:flex;align-items:center;gap:6px;white-space:nowrap;">
+          My Saved Searches
+          <svg viewBox="0 0 24 24" fill="currentColor" style="width:12px;height:12px"><path d="M7 10l5 5 5-5z"/></svg>
+        </button>
+        <button class="btn" onclick="showToast('Searching...')">Search</button>
+      </div>
+
+      <!-- Active filter pills (B-style visible state) -->
+      <div id="active-filter-pills" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:10px;">
+        <span style="font-size:12px;color:var(--text-muted);">Active:</span>
+        <span class="filter-pill" onclick="removeFilterPill(this,'org-filter-segment')">K-12 Education <span style="opacity:0.6;">✕</span></span>
+        <span class="filter-pill" onclick="removeFilterPill(this,'org-filter-states')">TX, CA, FL <span style="opacity:0.6;">✕</span></span>
+        <span class="filter-pill" onclick="removeFilterPill(this,'org-filter-engagement')">High Engagement <span style="opacity:0.6;">✕</span></span>
+        <button class="inline-link" style="margin-left:4px;font-size:12px;" onclick="clearOrgFilters()">Clear all</button>
+      </div>
+
+      <!-- Collapsible filter panel -->
+      <div id="org-filter-panel" style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;">
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.04em;">Location</div>
+            <select id="org-filter-city" class="filter-chip" style="width:100%;"><option>City</option><option>Dallas</option><option>Austin</option><option>Houston</option></select>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.04em;">State</div>
+            <select id="org-filter-states" class="filter-chip active-filter" style="width:100%;"><option>3 States ✓</option><option>Texas</option><option>California</option><option>Florida</option></select>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.04em;">Market Segment</div>
+            <select id="org-filter-segment" class="filter-chip active-filter" style="width:100%;"><option>K-12 Education ✓</option><option>K-12 Education</option><option>Higher Education</option><option>Healthcare</option></select>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.04em;">MS Sub-type</div>
+            <select class="filter-chip" style="width:100%;"><option>MS Sub-type</option></select>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.04em;">Size Band</div>
+            <select class="filter-chip" style="width:100%;"><option>All Sizes</option><option>(A) &lt;300K</option><option>(B) 600K–1.2M</option><option>(C) 1.2M–3M</option><option>(D) &gt;3M</option></select>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.04em;">Engagement</div>
+            <select id="org-filter-engagement" class="filter-chip active-filter" style="width:100%;"><option>High ✓</option><option>High</option><option>Medium</option><option>Low</option><option>Idle</option></select>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.04em;">Capital Projects</div>
+            <select class="filter-chip" style="width:100%;"><option>Any</option><option>Yes</option><option>No</option></select>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.04em;">Remaining Potential</div>
+            <select class="filter-chip" style="width:100%;"><option>Any</option></select>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:12px;">
+          <button class="inline-link" onclick="clearOrgFilters()">Clear filters</button>
+          <button class="inline-link" onclick="showToast('Search saved!')">Save search</button>
+          <button class="btn" style="padding:6px 20px;" onclick="showToast('Searching...')">Apply</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results count + export -->
+    <div class="results-toolbar" style="margin-bottom:8px;">
       <div class="results-count-box">
         10,000 Organizations Displayed — 10,078 Found
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
       </div>
       <div class="toolbar-spacer"></div>
-      <button class="btn btn-outline" style="display:flex;align-items:center;gap:6px;">
-        My Saved Searches
-        <svg viewBox="0 0 24 24" fill="currentColor" style="width:12px;height:12px"><path d="M7 10l5 5 5-5z"/></svg>
-      </button>
       <button class="btn btn-outline" onclick="showToast('Export started — check your email shortly')">Export</button>
-    </div>
-    <div class="filter-chips">
-      <select class="filter-chip active-filter"><option>Organization</option></select>
-      <select class="filter-chip"><option>City</option><option>Dallas</option><option>Austin</option><option>Houston</option></select>
-      <select class="filter-chip"><option>County</option></select>
-      <select class="filter-chip active-filter"><option>3 States Selected ✓</option><option>Texas</option><option>California</option><option>Florida</option></select>
-      <select class="filter-chip"><option>Zip Code</option></select>
-      <select class="filter-chip"><option>Market Segment</option><option>K-12 Education</option><option>Higher Education</option><option>Healthcare</option></select>
-      <select class="filter-chip"><option>MS Sub-type</option></select>
-      <select class="filter-chip"><option>Size Band</option><option>(A) &lt;300K</option><option>(B) 600K-1.2M</option><option>(C) 1.2M-3M</option><option>(D) &gt;3M</option></select>
-      <select class="filter-chip"><option>Engagement Score</option><option>High</option><option>Medium</option><option>Low</option><option>Idle</option></select>
-      <select class="filter-chip"><option>Significant Capital</option><option>Yes</option><option>No</option></select>
-      <select class="filter-chip"><option>Remaining Potential</option></select>
-    </div>
-    <div class="filter-actions">
-      <button class="inline-link" onclick="clearFilters()">Clear Filters</button>
-      <button class="inline-link" onclick="showToast('Search saved!')">Save Search</button>
     </div>
     <div class="data-table-wrap">
       <table class="data-table">
@@ -753,6 +816,162 @@
           <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Active contracts</div>
         </div>
       </div>
+    </div>
+
+    <!-- ── Contract Activity ── -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px;">
+      <div class="card" style="text-align:center;">
+        <div class="detail-label" style="margin-bottom:6px;">Your contracts · 12mo</div>
+        <div style="font-size:28px;font-weight:800;color:var(--blue);">3</div>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div class="detail-label" style="margin-bottom:6px;">Your contracts · 24mo</div>
+        <div style="font-size:28px;font-weight:800;color:var(--blue);">5</div>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div class="detail-label" style="margin-bottom:6px;">All OMNIA contracts · 12mo</div>
+        <div style="font-size:28px;font-weight:800;color:var(--blue);">11</div>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div class="detail-label" style="margin-bottom:6px;">All OMNIA contracts · 24mo</div>
+        <div style="font-size:28px;font-weight:800;color:var(--blue);">18</div>
+      </div>
+    </div>
+
+    <!-- ── Seasonal Buying Pattern ── -->
+    <div class="card" style="margin-top:16px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+        <div class="card-title" style="margin:0;">Seasonal buying pattern</div>
+        <div style="display:flex;gap:6px;">
+          <span id="heatmap-cat-btn" onclick="setHeatmapView('category')" style="font-size:12px;padding:4px 12px;border-radius:999px;background:var(--blue-light);color:var(--blue);border:1px solid rgba(0,114,206,0.3);cursor:pointer;font-weight:500;">By category</span>
+          <span id="heatmap-overall-btn" onclick="setHeatmapView('overall')" style="font-size:12px;padding:4px 12px;border-radius:999px;background:var(--bg);color:var(--text-muted);border:1px solid var(--border);cursor:pointer;">Overall</span>
+        </div>
+      </div>
+      <!-- Category heatmap -->
+      <div id="heatmap-category" style="overflow-x:auto;">
+        <div style="display:grid;grid-template-columns:100px repeat(12,1fr);gap:4px;min-width:520px;align-items:center;font-size:11px;">
+          <div></div>
+          <div style="text-align:center;color:var(--text-muted);">Jan</div><div style="text-align:center;color:var(--text-muted);">Feb</div><div style="text-align:center;color:var(--text-muted);">Mar</div><div style="text-align:center;color:var(--text-muted);">Apr</div><div style="text-align:center;color:var(--text-muted);">May</div><div style="text-align:center;color:var(--text-muted);">Jun</div><div style="text-align:center;color:var(--text-muted);">Jul</div><div style="text-align:center;color:var(--text-muted);">Aug</div><div style="text-align:center;color:var(--text-muted);">Sep</div><div style="text-align:center;color:var(--text-muted);">Oct</div><div style="text-align:center;color:var(--text-muted);">Nov</div><div style="text-align:center;color:var(--text-muted);">Dec</div>
+          <!-- Technology row: peaks Sep-Oct -->
+          <div style="color:var(--text-muted);padding-right:4px;white-space:nowrap;">Technology</div>
+          <div style="height:22px;border-radius:3px;background:#E8F3FC;"></div>
+          <div style="height:22px;border-radius:3px;background:#E8F3FC;"></div>
+          <div style="height:22px;border-radius:3px;background:#E8F3FC;"></div>
+          <div style="height:22px;border-radius:3px;background:#E8F3FC;"></div>
+          <div style="height:22px;border-radius:3px;background:#E8F3FC;"></div>
+          <div style="height:22px;border-radius:3px;background:#E8F3FC;"></div>
+          <div style="height:22px;border-radius:3px;background:#4A90D9;"></div>
+          <div style="height:22px;border-radius:3px;background:#4A90D9;"></div>
+          <div style="height:22px;border-radius:3px;background:#005BAC;"></div>
+          <div style="height:22px;border-radius:3px;background:#005BAC;"></div>
+          <div style="height:22px;border-radius:3px;background:#4A90D9;"></div>
+          <div style="height:22px;border-radius:3px;background:#E8F3FC;"></div>
+          <!-- Facilities row: peaks Mar-Apr -->
+          <div style="color:var(--text-muted);padding-right:4px;white-space:nowrap;">Facilities</div>
+          <div style="height:22px;border-radius:3px;background:#E8F3FC;"></div>
+          <div style="height:22px;border-radius:3px;background:#4A90D9;"></div>
+          <div style="height:22px;border-radius:3px;background:#005BAC;"></div>
+          <div style="height:22px;border-radius:3px;background:#005BAC;"></div>
+          <div style="height:22px;border-radius:3px;background:#4A90D9;"></div>
+          <div style="height:22px;border-radius:3px;background:#E8F3FC;"></div>
+          <div style="height:22px;border-radius:3px;background:#E8F3FC;"></div>
+          <div style="height:22px;border-radius:3px;background:#E8F3FC;"></div>
+          <div style="height:22px;border-radius:3px;background:#E8F3FC;"></div>
+          <div style="height:22px;border-radius:3px;background:#E8F3FC;"></div>
+          <div style="height:22px;border-radius:3px;background:#4A90D9;"></div>
+          <div style="height:22px;border-radius:3px;background:#4A90D9;"></div>
+          <!-- Office Supplies row: peaks Jan, Jul-Aug -->
+          <div style="color:var(--text-muted);padding-right:4px;white-space:nowrap;">Office Supplies</div>
+          <div style="height:22px;border-radius:3px;background:#005BAC;"></div>
+          <div style="height:22px;border-radius:3px;background:#4A90D9;"></div>
+          <div style="height:22px;border-radius:3px;background:#E8F3FC;"></div>
+          <div style="height:22px;border-radius:3px;background:#E8F3FC;"></div>
+          <div style="height:22px;border-radius:3px;background:#E8F3FC;"></div>
+          <div style="height:22px;border-radius:3px;background:#E8F3FC;"></div>
+          <div style="height:22px;border-radius:3px;background:#005BAC;"></div>
+          <div style="height:22px;border-radius:3px;background:#4A90D9;"></div>
+          <div style="height:22px;border-radius:3px;background:#E8F3FC;"></div>
+          <div style="height:22px;border-radius:3px;background:#E8F3FC;"></div>
+          <div style="height:22px;border-radius:3px;background:#E8F3FC;"></div>
+          <div style="height:22px;border-radius:3px;background:#4A90D9;"></div>
+          <!-- Food & Bev row: peaks May-Jun -->
+          <div style="color:var(--text-muted);padding-right:4px;white-space:nowrap;">Food &amp; Bev</div>
+          <div style="height:22px;border-radius:3px;background:#E8F3FC;"></div>
+          <div style="height:22px;border-radius:3px;background:#E8F3FC;"></div>
+          <div style="height:22px;border-radius:3px;background:#4A90D9;"></div>
+          <div style="height:22px;border-radius:3px;background:#4A90D9;"></div>
+          <div style="height:22px;border-radius:3px;background:#005BAC;"></div>
+          <div style="height:22px;border-radius:3px;background:#005BAC;"></div>
+          <div style="height:22px;border-radius:3px;background:#4A90D9;"></div>
+          <div style="height:22px;border-radius:3px;background:#E8F3FC;"></div>
+          <div style="height:22px;border-radius:3px;background:#E8F3FC;"></div>
+          <div style="height:22px;border-radius:3px;background:#E8F3FC;"></div>
+          <div style="height:22px;border-radius:3px;background:#E8F3FC;"></div>
+          <div style="height:22px;border-radius:3px;background:#E8F3FC;"></div>
+        </div>
+      </div>
+      <!-- Overall heatmap (hidden by default) -->
+      <div id="heatmap-overall" style="display:none;">
+        <div style="display:grid;grid-template-columns:100px repeat(12,1fr);gap:4px;min-width:520px;align-items:center;font-size:11px;">
+          <div></div>
+          <div style="text-align:center;color:var(--text-muted);">Jan</div><div style="text-align:center;color:var(--text-muted);">Feb</div><div style="text-align:center;color:var(--text-muted);">Mar</div><div style="text-align:center;color:var(--text-muted);">Apr</div><div style="text-align:center;color:var(--text-muted);">May</div><div style="text-align:center;color:var(--text-muted);">Jun</div><div style="text-align:center;color:var(--text-muted);">Jul</div><div style="text-align:center;color:var(--text-muted);">Aug</div><div style="text-align:center;color:var(--text-muted);">Sep</div><div style="text-align:center;color:var(--text-muted);">Oct</div><div style="text-align:center;color:var(--text-muted);">Nov</div><div style="text-align:center;color:var(--text-muted);">Dec</div>
+          <div style="color:var(--text-muted);">All spend</div>
+          <div style="height:22px;border-radius:3px;background:#005BAC;"></div>
+          <div style="height:22px;border-radius:3px;background:#4A90D9;"></div>
+          <div style="height:22px;border-radius:3px;background:#005BAC;"></div>
+          <div style="height:22px;border-radius:3px;background:#005BAC;"></div>
+          <div style="height:22px;border-radius:3px;background:#4A90D9;"></div>
+          <div style="height:22px;border-radius:3px;background:#4A90D9;"></div>
+          <div style="height:22px;border-radius:3px;background:#005BAC;"></div>
+          <div style="height:22px;border-radius:3px;background:#4A90D9;"></div>
+          <div style="height:22px;border-radius:3px;background:#005BAC;"></div>
+          <div style="height:22px;border-radius:3px;background:#005BAC;"></div>
+          <div style="height:22px;border-radius:3px;background:#4A90D9;"></div>
+          <div style="height:22px;border-radius:3px;background:#4A90D9;"></div>
+        </div>
+      </div>
+      <!-- Legend -->
+      <div style="display:flex;align-items:center;gap:14px;margin-top:12px;flex-wrap:wrap;">
+        <span style="font-size:11px;color:var(--text-muted);">Spend intensity:</span>
+        <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text-muted);"><span style="width:12px;height:12px;border-radius:2px;background:#E8F3FC;display:inline-block;border:1px solid var(--border);"></span>Low</span>
+        <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text-muted);"><span style="width:12px;height:12px;border-radius:2px;background:#4A90D9;display:inline-block;"></span>Moderate</span>
+        <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text-muted);"><span style="width:12px;height:12px;border-radius:2px;background:#005BAC;display:inline-block;"></span>Peak</span>
+      </div>
+    </div>
+
+    <!-- ── Buying Signals ── -->
+    <div class="card" style="margin-top:16px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <div class="card-title" style="margin:0;">Buying signals</div>
+        <span style="background:#EAF3DE;color:#27500A;font-size:11px;font-weight:600;padding:3px 10px;border-radius:999px;border:1px solid #97C459;">3 active</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:10px;">
+        <div style="background:var(--bg);border-radius:var(--radius-sm);padding:12px;border:1px solid var(--border);">
+          <div style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;vertical-align:-1px;margin-right:3px;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Spend white space
+          </div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;">$420K Facilities, $0 Tech</div>
+          <div style="font-size:11px;color:var(--text-muted);">No spend in your category</div>
+        </div>
+        <div style="background:var(--bg);border-radius:var(--radius-sm);padding:12px;border:1px solid var(--border);">
+          <div style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;vertical-align:-1px;margin-right:3px;"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
+            Declining spend
+          </div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;">Down 31% YoY</div>
+          <div style="font-size:11px;color:var(--text-muted);">$180K → $124K on MA-2022</div>
+        </div>
+        <div style="background:var(--bg);border-radius:var(--radius-sm);padding:12px;border:1px solid var(--border);">
+          <div style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;vertical-align:-1px;margin-right:3px;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            OPUS activity
+          </div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;">$87K LTM · 14 orders</div>
+          <div style="font-size:11px;color:var(--text-muted);">Last order 23 days ago</div>
+        </div>
+      </div>
+      <div style="margin-top:10px;font-size:11px;color:var(--text-muted);">Signals only appear when data is available for this organization.</div>
     </div>
 
     <div class="details-grid" style="margin-top:16px;">
@@ -1144,322 +1363,4 @@
           <div class="prefs-options">
             <div class="prefs-option selected" onclick="selectPref(this, 'org-engagement-summary', 'Highly Engaged + Active')">Highly Engaged &amp; Active — ready to buy</div>
             <div class="prefs-option" onclick="selectPref(this, 'org-engagement-summary', 'Somewhat Engaged')">Somewhat Engaged — warming up</div>
-            <div class="prefs-option" onclick="selectPref(this, 'org-engagement-summary', 'Idle / Less Engaged')">Idle / Less Engaged — re-activation opportunities</div>
-            <div class="prefs-option" onclick="selectPref(this, 'org-engagement-summary', 'All engagement levels')">All engagement levels</div>
-          </div>
-        </div>
-        <div class="prefs-question">
-          <div class="prefs-question-label">Column Selector</div>
-          <button class="col-selector-btn" onclick="showToast('Column selector coming soon')">
-            Choose columns to display in results
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-          </button>
-        </div>
-      </div>
-      <div class="prefs-summary">
-        <div class="prefs-summary-title">
-          Preference Summary
-          <button class="inline-link" onclick="showToast('Preferences saved!')">Save</button>
-        </div>
-        <div class="prefs-summary-item" id="org-goal-summary">New Prospects</div>
-        <div class="prefs-summary-item" id="org-segment-summary">K-12 Education</div>
-        <div class="prefs-summary-item" id="org-size-summary">Mid — $600K–$3M</div>
-        <div class="prefs-summary-item" id="org-engagement-summary">Highly Engaged + Active</div>
-        <div class="prefs-summary-item">Default Columns</div>
-        <span class="prefs-goto" onclick="navigate('org-search')">Go to Organization Search →</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══════════════════ CONTRACT DETAIL ══════════════════ -->
-  <div id="screen-contract-detail" class="screen">
-    <div class="back-btn" onclick="navigate('contracts')">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-      Back to Contracts
-    </div>
-
-    <!-- Contract header -->
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
-      <div>
-        <div style="font-size:20px;font-weight:700;color:var(--text);margin-bottom:6px;">Technology Products &amp; Services — Master Agreement</div>
-        <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--text-muted);">
-          <span>Contract #: MA-2024-0041</span>
-          <span>Effective: Jan 1, 2024</span>
-          <span>Expires: Dec 31, 2026</span>
-          <span><span class="badge badge-green">Active</span></span>
-        </div>
-      </div>
-      <button class="btn btn-outline" onclick="showToast('Contract document downloading...')">Download PDF</button>
-    </div>
-
-    <!-- KPI row -->
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;">
-      <div class="card" style="text-align:center;">
-        <div class="detail-label" style="margin-bottom:6px;">Member Organizations Using</div>
-        <div style="font-size:28px;font-weight:800;color:var(--blue);">1,247</div>
-        <div style="font-size:11px;color:#22C55E;margin-top:2px;">▲ 14% vs prior year</div>
-      </div>
-      <div class="card" style="text-align:center;">
-        <div class="detail-label" style="margin-bottom:6px;">LTM Supplier Sales</div>
-        <div style="font-size:28px;font-weight:800;color:var(--blue);">$4.2M</div>
-        <div style="font-size:11px;color:#22C55E;margin-top:2px;">▲ 8% vs prior year</div>
-      </div>
-      <div class="card" style="text-align:center;">
-        <div class="detail-label" style="margin-bottom:6px;">Avg. Spend per Member</div>
-        <div style="font-size:28px;font-weight:800;color:var(--blue);">$3,368</div>
-        <div style="font-size:11px;color:#EF4444;margin-top:2px;">▼ 5% vs prior year</div>
-      </div>
-      <div class="card" style="text-align:center;">
-        <div class="detail-label" style="margin-bottom:6px;">OPUS-Enabled Members</div>
-        <div style="font-size:28px;font-weight:800;color:var(--blue);">342</div>
-        <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">27% of total</div>
-      </div>
-    </div>
-
-    <!-- Insights + breakdown -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
-      <div class="card">
-        <div class="card-title">Sales Trend — Last 12 Months</div>
-        <div style="margin-top:12px;">
-          <!-- Simple bar chart representation -->
-          <div style="display:flex;align-items:flex-end;gap:6px;height:80px;">
-            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="background:var(--blue-light);width:100%;height:45px;border-radius:3px 3px 0 0;"></div><div style="font-size:9px;color:var(--text-muted)">Jul</div></div>
-            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="background:var(--blue-light);width:100%;height:55px;border-radius:3px 3px 0 0;"></div><div style="font-size:9px;color:var(--text-muted)">Aug</div></div>
-            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="background:var(--blue-light);width:100%;height:40px;border-radius:3px 3px 0 0;"></div><div style="font-size:9px;color:var(--text-muted)">Sep</div></div>
-            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="background:var(--blue);width:100%;height:65px;border-radius:3px 3px 0 0;"></div><div style="font-size:9px;color:var(--text-muted)">Oct</div></div>
-            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="background:var(--blue);width:100%;height:70px;border-radius:3px 3px 0 0;"></div><div style="font-size:9px;color:var(--text-muted)">Nov</div></div>
-            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="background:var(--blue);width:100%;height:75px;border-radius:3px 3px 0 0;"></div><div style="font-size:9px;color:var(--text-muted)">Dec</div></div>
-            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="background:var(--blue-light);width:100%;height:50px;border-radius:3px 3px 0 0;"></div><div style="font-size:9px;color:var(--text-muted)">Jan</div></div>
-            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="background:var(--blue-light);width:100%;height:48px;border-radius:3px 3px 0 0;"></div><div style="font-size:9px;color:var(--text-muted)">Feb</div></div>
-            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="background:var(--blue);width:100%;height:60px;border-radius:3px 3px 0 0;"></div><div style="font-size:9px;color:var(--text-muted)">Mar</div></div>
-            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="background:var(--blue);width:100%;height:68px;border-radius:3px 3px 0 0;"></div><div style="font-size:9px;color:var(--text-muted)">Apr</div></div>
-            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="background:var(--blue);width:100%;height:72px;border-radius:3px 3px 0 0;"></div><div style="font-size:9px;color:var(--text-muted)">May</div></div>
-            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="background:var(--blue);width:100%;height:80px;border-radius:3px 3px 0 0;"></div><div style="font-size:9px;color:var(--text-muted)">Jun</div></div>
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title">Adoption by Market Segment</div>
-        <div style="margin-top:10px;display:flex;flex-direction:column;gap:10px;">
-          <div>
-            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>K-12 Education</span><span style="font-weight:600;">48% · 600 orgs</span></div>
-            <div style="background:#F1F5F9;border-radius:4px;height:8px;"><div style="background:var(--blue);width:48%;height:100%;border-radius:4px;"></div></div>
-          </div>
-          <div>
-            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>State &amp; Local Gov</span><span style="font-weight:600;">22% · 274 orgs</span></div>
-            <div style="background:#F1F5F9;border-radius:4px;height:8px;"><div style="background:var(--blue-muted);width:22%;height:100%;border-radius:4px;"></div></div>
-          </div>
-          <div>
-            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Higher Education</span><span style="font-weight:600;">18% · 224 orgs</span></div>
-            <div style="background:#F1F5F9;border-radius:4px;height:8px;"><div style="background:var(--blue-muted);width:18%;height:100%;border-radius:4px;"></div></div>
-          </div>
-          <div>
-            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Healthcare</span><span style="font-weight:600;">12% · 149 orgs</span></div>
-            <div style="background:#F1F5F9;border-radius:4px;height:8px;"><div style="background:var(--blue-light);width:12%;height:100%;border-radius:4px;border:1px solid var(--blue-muted);"></div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Member health + opportunities -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
-      <div class="card">
-        <div class="card-title">Top Opportunities on This Contract</div>
-        <div style="margin-top:8px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #F1F5F9;cursor:pointer;" onclick="navigate('org-details')">
-            <div>
-              <div style="font-size:13px;font-weight:600;color:var(--blue)">Austin ISD</div>
-              <div style="font-size:11px;color:var(--text-muted)">K-12 · TX · Highly Engaged</div>
-            </div>
-            <div style="text-align:right;">
-              <div style="font-size:13px;font-weight:700;color:#22C55E">$240K potential</div>
-              <div style="font-size:11px;color:var(--text-muted)">0 contracts used LTM</div>
-            </div>
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #F1F5F9;cursor:pointer;" onclick="navigate('org-details')">
-            <div>
-              <div style="font-size:13px;font-weight:600;color:var(--blue)">Miami-Dade County Schools</div>
-              <div style="font-size:11px;color:var(--text-muted)">K-12 · FL · Highly Engaged</div>
-            </div>
-            <div style="text-align:right;">
-              <div style="font-size:13px;font-weight:700;color:#22C55E">$510K potential</div>
-              <div style="font-size:11px;color:var(--text-muted)">2 contracts used LTM</div>
-            </div>
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;cursor:pointer;" onclick="navigate('org-details')">
-            <div>
-              <div style="font-size:13px;font-weight:600;color:var(--blue)">City of Anaheim</div>
-              <div style="font-size:11px;color:var(--text-muted)">State &amp; Local · CA · Highly Engaged</div>
-            </div>
-            <div style="text-align:right;">
-              <div style="font-size:13px;font-weight:700;color:#22C55E">$198K potential</div>
-              <div style="font-size:11px;color:var(--text-muted)">1 contract used LTM</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title">Member Health on This Contract</div>
-        <div style="margin-top:10px;display:flex;flex-direction:column;gap:10px;">
-          <div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--blue-light);border-radius:var(--radius-sm);">
-            <span style="font-size:13px;">Highly Engaged</span>
-            <span style="font-weight:700;color:var(--blue)">412 orgs</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;padding:10px 12px;background:#FEF3C7;border-radius:var(--radius-sm);">
-            <span style="font-size:13px;">Somewhat Engaged</span>
-            <span style="font-weight:700;color:#92400E">518 orgs</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;padding:10px 12px;background:#FEE2E2;border-radius:var(--radius-sm);">
-            <span style="font-size:13px;">Idle / Less Engaged</span>
-            <span style="font-weight:700;color:#991B1B">317 orgs</span>
-          </div>
-          <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">317 idle members represent significant re-engagement opportunity</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- View Similar Organizations CTA -->
-    <div style="background:linear-gradient(135deg,var(--blue) 0%,var(--blue-dark) 100%);border-radius:var(--radius);padding:24px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
-      <div>
-        <div style="color:var(--white);font-size:16px;font-weight:700;margin-bottom:4px;">Find More Organizations Like These</div>
-        <div style="color:rgba(255,255,255,0.8);font-size:13px;">Search for public-sector organizations with similar profiles — size, segment, and engagement — who aren't yet using this contract.</div>
-      </div>
-      <button class="btn" style="background:var(--white);color:var(--blue);font-weight:700;padding:12px 28px;white-space:nowrap;" onclick="navigate('org-search')">
-        View Similar Organizations →
-      </button>
-    </div>
-  </div>
-
-</main>
-
-<!-- SHARE DROPDOWN -->
-<div class="share-dropdown" id="shareDropdown">
-  <div class="share-option" onclick="closeShare();showToast('Set as default for all users')">Make Default Search for All Users</div>
-  <div class="share-option" onclick="closeShare();showToast('Set as default for selected users')">Make Default Search for User Selection</div>
-  <div class="share-option" onclick="closeShare();showToast('Made only available for all users')">Make Only Available Search for All Users</div>
-  <div class="share-option" onclick="closeShare();showToast('Made only available for user selection')">Make Only Available Search for User Selection</div>
-</div>
-
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
-
-<script>
-  let currentScreen = 'home';
-  const prevScreens = [];
-
-  const screenNavMap = {
-    'home': 'nav-home',
-    'sales-compass': 'nav-sales-compass',
-    'saved-searches': 'nav-saved-searches',
-    'org-search': 'nav-org-search',
-    'org-search-prefs': 'nav-org-search',
-    'org-details': 'nav-org-search',
-    'contracts': 'nav-org-search',
-    'contract-detail': 'nav-org-search',
-    'contact-search': 'nav-contact-search',
-    'contact-results': 'nav-contact-search',
-    'membership-status': 'nav-membership-status',
-  };
-
-  const screenTitles = {
-    'home': 'Supplier Name',
-    'sales-compass': 'Supplier Name',
-    'org-search': 'Supplier Name',
-    'org-search-prefs': 'Supplier Name',
-    'org-details': 'All IN Good Taste Catering',
-    'contracts': 'All IN Good Taste Catering',
-    'contract-detail': 'All IN Good Taste Catering',
-    'contact-search': 'Supplier Name',
-    'contact-results': 'Supplier Name',
-    'saved-searches': 'Supplier Name',
-    'membership-status': 'Supplier Name',
-  };
-
-  function navigate(screen) {
-    prevScreens.push(currentScreen);
-
-    // Hide all screens
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-
-    // Show target screen
-    const el = document.getElementById('screen-' + screen);
-    if (el) el.classList.add('active');
-
-    // Highlight nav
-    const navId = screenNavMap[screen];
-    if (navId) document.getElementById(navId)?.classList.add('active');
-
-    // Update header
-    document.getElementById('headerSupplier').textContent = screenTitles[screen] || 'Supplier Name';
-
-    currentScreen = screen;
-    window.scrollTo(0, 0);
-  }
-
-  function goBack() {
-    if (prevScreens.length > 0) {
-      const prev = prevScreens.pop();
-      navigate(prev);
-      prevScreens.pop(); // navigate pushes again, so remove that duplicate
-    }
-  }
-
-  function clearFilters() {
-    document.querySelectorAll('.filter-select, .filter-chip').forEach(sel => { sel.selectedIndex = 0; });
-    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active-filter'));
-    showToast('Filters cleared');
-  }
-
-  function toggleAccordion(id) {
-    const body = document.getElementById(id);
-    const header = document.getElementById(id + '-header');
-    const isOpen = body.classList.contains('open');
-    body.classList.toggle('open', !isOpen);
-    header.classList.toggle('open', !isOpen);
-  }
-
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    clearTimeout(window._toastTimer);
-    window._toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
-  }
-
-  function selectPref(el, summaryId, value) {
-    el.closest('.prefs-options').querySelectorAll('.prefs-option').forEach(o => o.classList.remove('selected'));
-    el.classList.add('selected');
-    const summary = document.getElementById(summaryId);
-    if (summary) summary.textContent = value;
-  }
-
-  function searchMembership() {
-    const org = document.getElementById('membership-org').value.trim();
-    const results = document.getElementById('membership-results');
-    const nameEl = document.getElementById('mem-result-name');
-    nameEl.textContent = org || 'All IN Good Taste Catering';
-    results.style.display = 'block';
-    results.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  function openShare(event) {
-    event.stopPropagation();
-    const dd = document.getElementById('shareDropdown');
-    const rect = event.currentTarget.getBoundingClientRect();
-    dd.style.top = (rect.bottom + window.scrollY + 4) + 'px';
-    dd.style.left = (rect.left - 240 + window.scrollX) + 'px';
-    dd.classList.add('open');
-  }
-
-  function closeShare() {
-    document.getElementById('shareDropdown').classList.remove('open');
-  }
-
-  document.addEventListener('click', function(e) {
-    if (!e.target.closest('#shareDropdown')) closeShare();
-  });
-</script>
-
-</body>
-</html>
+            <div class="prefs-option" onclick="selectPref(this,
