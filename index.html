@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OMNIA Connect – Prototype</title>
+<title>OMNIA Connect â Prototype</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -27,7 +27,7 @@
 
   body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; }
 
-  /* ── HEADER ── */
+  /* ââ HEADER ââ */
   .header {
     position: fixed; top: 0; left: 0; right: 0; height: var(--header-h);
     background: var(--white); border-bottom: 1.5px solid var(--blue);
@@ -48,7 +48,7 @@
   .header-apps { cursor: pointer; opacity: 0.7; }
   .header-apps:hover { opacity: 1; }
 
-  /* ── SIDEBAR ── */
+  /* ââ SIDEBAR ââ */
   .sidebar {
     position: fixed; top: var(--header-h); left: 0; bottom: 0;
     width: var(--sidebar-w); background: var(--white);
@@ -76,21 +76,21 @@
   }
   .nav-section svg { width: 14px; height: 14px; }
 
-  /* ── MAIN ── */
+  /* ââ MAIN ââ */
   .main {
     margin-left: var(--sidebar-w); margin-top: var(--header-h);
     min-height: calc(100vh - var(--header-h)); padding: 28px 32px;
   }
 
-  /* ── SCREENS ── */
+  /* ââ SCREENS ââ */
   .screen { display: none; }
   .screen.active { display: block; }
 
-  /* ── PAGE TITLE ── */
+  /* ââ PAGE TITLE ââ */
   .page-title { font-size: 20px; font-weight: 700; color: var(--blue); margin-bottom: 20px; }
   .page-subtitle { font-size: 18px; font-weight: 600; color: var(--blue); margin-bottom: 24px; text-align: center; }
 
-  /* ── SEARCH FILTERS ROW ── */
+  /* ââ SEARCH FILTERS ROW ââ */
   .filter-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; }
   .filter-select {
     appearance: none; background: var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236B7280'/%3E%3C/svg%3E") no-repeat right 10px center;
@@ -110,14 +110,14 @@
   .btn-outline { background: var(--white); color: var(--text); border: 1.5px solid var(--border); }
   .btn-outline:hover { border-color: var(--blue); color: var(--blue); }
 
-  /* ── CARD ── */
+  /* ââ CARD ââ */
   .card {
     background: var(--white); border: 1px solid var(--border); border-radius: var(--radius);
     padding: 18px; box-shadow: var(--shadow);
   }
   .card-title { font-size: 15px; font-weight: 700; color: var(--blue); margin-bottom: 10px; }
 
-  /* ── HOME PAGE ── */
+  /* ââ HOME PAGE ââ */
   .home-search-box { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 28px; box-shadow: var(--shadow); }
   .saved-section { margin-bottom: 28px; }
   .saved-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
@@ -168,7 +168,7 @@
   .resource-card-title { font-size: 13px; font-weight: 600; color: var(--text); }
   .resource-card-desc { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
 
-  /* ── SALES COMPASS ── */
+  /* ââ SALES COMPASS ââ */
   .compass-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 680px; margin: 0 auto; }
   .compass-tile {
     background: var(--white); border: 1.5px solid var(--border); border-radius: var(--radius);
@@ -181,7 +181,7 @@
   .compass-tile svg { width: 32px; height: 32px; color: var(--blue); }
   .compass-tile-label { font-size: 15px; font-weight: 700; color: var(--blue); }
 
-  /* ── ORG SEARCH RESULTS ── */
+  /* ââ ORG SEARCH RESULTS ââ */
   .results-toolbar {
     display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;
   }
@@ -216,7 +216,7 @@
   }
   .filter-pill:hover { background: #d0e8f8; }
 
-  /* ── DATA TABLE ── */
+  /* ââ DATA TABLE ââ */
   .data-table-wrap { background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; box-shadow: var(--shadow); }
   .data-table { width: 100%; border-collapse: collapse; }
   .data-table thead tr { background: #111827; color: var(--white); }
@@ -235,7 +235,7 @@
   .badge-blue { background: var(--blue-light); color: var(--blue); }
   .badge-gray { background: #F3F4F6; color: #4B5563; }
 
-  /* ── ORG DETAILS ── */
+  /* ââ ORG DETAILS ââ */
   .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
   .details-grid-3 { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 16px; }
   .detail-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 2px; letter-spacing: 0.4px; }
@@ -259,13 +259,13 @@
   .accordion-body { padding: 0 18px 16px; display: none; }
   .accordion-body.open { display: block; }
 
-  /* ── CONTACTS TABLE (inside accordion) ── */
+  /* ââ CONTACTS TABLE (inside accordion) ââ */
   .contacts-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
   .contacts-table th { background: #F9FAFB; border-bottom: 2px solid var(--border); padding: 8px 12px; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); }
   .contacts-table td { padding: 10px 12px; border-bottom: 1px solid #F1F5F9; }
   .contacts-table tr:last-child td { border-bottom: none; }
 
-  /* ── CONTRACT SEARCH ── */
+  /* ââ CONTRACT SEARCH ââ */
   .contract-list { max-width: 600px; }
   .contract-item {
     background: var(--white); border: 1.5px solid var(--border); border-radius: var(--radius-sm);
@@ -277,7 +277,7 @@
   .contract-meta { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
   .contract-item svg { width: 16px; height: 16px; color: var(--blue); }
 
-  /* ── MEMBERSHIP STATUS ── */
+  /* ââ MEMBERSHIP STATUS ââ */
   .membership-form { max-width: 680px; }
   .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px; }
   .form-group label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--blue); margin-bottom: 8px; }
@@ -289,7 +289,7 @@
   .form-input::placeholder { color: #C4C9D4; }
   .form-actions { display: flex; justify-content: flex-end; gap: 12px; }
 
-  /* ── SEARCH PREFERENCES ── */
+  /* ââ SEARCH PREFERENCES ââ */
   .prefs-layout { display: grid; grid-template-columns: 1fr 380px; gap: 24px; }
   .prefs-question { margin-bottom: 24px; }
   .prefs-question-label { font-size: 14px; font-weight: 600; color: var(--blue); margin-bottom: 10px; }
@@ -305,7 +305,7 @@
   .prefs-summary-item { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 14px; margin-bottom: 8px; font-size: 13px; color: var(--text); }
   .prefs-goto { display: block; width: 100%; text-align: center; color: var(--blue); font-size: 13px; font-weight: 600; cursor: pointer; margin-top: 14px; text-decoration: underline; }
 
-  /* ── COLUMN SELECTOR ── */
+  /* ââ COLUMN SELECTOR ââ */
   .col-selector-btn {
     width: 100%; background: var(--white); border: 1.5px solid var(--border); border-radius: var(--radius-sm);
     padding: 11px 16px; display: flex; align-items: center; justify-content: space-between;
@@ -315,7 +315,7 @@
   .col-selector-btn:hover { border-color: var(--blue); }
   .col-selector-btn svg { width: 16px; height: 16px; color: var(--blue); }
 
-  /* ── TOAST ── */
+  /* ââ TOAST ââ */
   .toast {
     position: fixed; bottom: 24px; right: 24px; background: #1A1A2E; color: var(--white);
     padding: 12px 20px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500;
@@ -324,19 +324,19 @@
   }
   .toast.show { opacity: 1; transform: translateY(0); }
 
-  /* ── MEMBERSHIP RESULTS ── */
+  /* ââ MEMBERSHIP RESULTS ââ */
   .membership-result-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 12px; box-shadow: var(--shadow); }
   .membership-result-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
   .status-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
   .status-item .status-label { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-bottom: 4px; }
   .status-item .status-value { font-size: 13px; font-weight: 600; }
 
-  /* ── BREADCRUMB / BACK ── */
+  /* ââ BREADCRUMB / BACK ââ */
   .back-btn { display: inline-flex; align-items: center; gap: 6px; color: var(--blue); cursor: pointer; font-size: 13px; margin-bottom: 20px; }
   .back-btn:hover { text-decoration: underline; }
   .back-btn svg { width: 16px; height: 16px; }
 
-  /* ── SHARE DROPDOWN ── */
+  /* ââ SHARE DROPDOWN ââ */
   .share-dropdown {
     position: fixed; background: var(--white); border: 1px solid var(--border);
     border-radius: var(--radius); box-shadow: var(--shadow-md); z-index: 200;
@@ -349,15 +349,15 @@
   .share-option:hover { background: var(--blue-light); color: var(--blue); }
   .share-option + .share-option { border-top: 1px solid #F1F5F9; }
 
-  /* ── SCROLLBAR ── */
+  /* ââ SCROLLBAR ââ */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
-  /* ── RESPONSIVE hint ── */
+  /* ââ RESPONSIVE hint ââ */
   .chip-tag { display: inline-block; background: var(--blue-light); color: var(--blue); border-radius: 12px; padding: 2px 8px; font-size: 11px; font-weight: 600; }
 
-  /* ── ORG SEARCH PREFERENCES ── */
+  /* ââ ORG SEARCH PREFERENCES ââ */
   .org-prefs-form { max-width: 780px; }
 </style>
 </head>
@@ -441,7 +441,7 @@
 <!-- MAIN CONTENT -->
 <main class="main">
 
-  <!-- ══════════════════ HOME ══════════════════ -->
+  <!-- ââââââââââââââââââ HOME ââââââââââââââââââ -->
   <div id="screen-home" class="screen active">
     <div class="home-search-box">
       <div class="filter-row">
@@ -508,12 +508,12 @@
     <div class="saved-section">
       <div class="saved-header">
         <span class="saved-header-title">Saved Searches (3)</span>
-        <a href="#" onclick="navigate('saved-searches');return false;">→ View All</a>
+        <a href="#" onclick="navigate('saved-searches');return false;">â View All</a>
       </div>
       <div class="saved-item" onclick="navigate('org-search')">
         <div>
-          <div class="saved-item-name">K-12 Texas – High Engagement</div>
-          <div class="saved-item-meta">Organizations · Last run: Jun 14, 2026 · 342 results</div>
+          <div class="saved-item-name">K-12 Texas â High Engagement</div>
+          <div class="saved-item-meta">Organizations Â· Last run: Jun 14, 2026 Â· 342 results</div>
         </div>
         <div class="saved-actions">
           <svg viewBox="0 0 24 24" fill="currentColor" title="Share" onclick="openShare(event)" style="cursor:pointer"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11A2.99 2.99 0 0018 8c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
@@ -522,8 +522,8 @@
       </div>
       <div class="saved-item" onclick="navigate('org-search')">
         <div>
-          <div class="saved-item-name">Healthcare – New Members – Southwest</div>
-          <div class="saved-item-meta">Organizations · Last run: Jun 10, 2026 · 128 results</div>
+          <div class="saved-item-name">Healthcare â New Members â Southwest</div>
+          <div class="saved-item-meta">Organizations Â· Last run: Jun 10, 2026 Â· 128 results</div>
         </div>
         <div class="saved-actions">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11A2.99 2.99 0 0018 8c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
@@ -532,8 +532,8 @@
       </div>
       <div class="saved-item" onclick="navigate('contact-search')">
         <div>
-          <div class="saved-item-name">Procurement Contacts – California</div>
-          <div class="saved-item-meta">Contacts · Last run: Jun 5, 2026 · 87 results</div>
+          <div class="saved-item-name">Procurement Contacts â California</div>
+          <div class="saved-item-meta">Contacts Â· Last run: Jun 5, 2026 Â· 87 results</div>
         </div>
         <div class="saved-actions">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11A2.99 2.99 0 0018 8c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
@@ -546,7 +546,7 @@
       <div class="saved-header"><span class="saved-header-title">Supplier Bulletin Board</span></div>
       <div class="bulletin-box">
         <div class="bulletin-content">
-          <p><strong>📢 June 2026 Update:</strong> New contract opportunities available in the K-12 and Higher Education segments. Members in Texas, California, and Florida are showing increased purchasing activity this quarter.</p>
+          <p><strong>ð¢ June 2026 Update:</strong> New contract opportunities available in the K-12 and Higher Education segments. Members in Texas, California, and Florida are showing increased purchasing activity this quarter.</p>
           <p style="margin-top:10px"><strong>Reminder:</strong> Q2 supplier performance reviews begin July 1. Please ensure your product catalog and pricing are up to date in the portal.</p>
         </div>
       </div>
@@ -588,13 +588,13 @@
     </div>
   </div>
 
-  <!-- ══════════════════ SALES COMPASS ══════════════════ -->
+  <!-- ââââââââââââââââââ SALES COMPASS ââââââââââââââââââ -->
   <div id="screen-sales-compass" class="screen">
     <div class="back-btn" onclick="navigate('home')">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
       Back
     </div>
-    <p class="page-subtitle">Where is your sales compass pointing today? — Set your course for today's goals</p>
+    <p class="page-subtitle">Where is your sales compass pointing today? â Set your course for today's goals</p>
     <div class="compass-grid">
       <div class="compass-tile" onclick="navigate('contact-search')">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
@@ -615,7 +615,7 @@
     </div>
   </div>
 
-  <!-- ══════════════════ ORG SEARCH RESULTS ══════════════════ -->
+  <!-- ââââââââââââââââââ ORG SEARCH RESULTS ââââââââââââââââââ -->
   <div id="screen-org-search" class="screen">
     <div class="back-btn" onclick="navigate('home')">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
@@ -623,7 +623,7 @@
     </div>
     <div class="page-title">Organization Search Results</div>
 
-    <!-- ── Search bar ── -->
+    <!-- ââ Search bar ââ -->
     <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;">
       <!-- Top row: search input + filter toggle + actions -->
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
@@ -646,9 +646,9 @@
       <!-- Active filter pills (B-style visible state) -->
       <div id="active-filter-pills" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:10px;">
         <span style="font-size:12px;color:var(--text-muted);">Active:</span>
-        <span class="filter-pill" onclick="removeFilterPill(this,'org-filter-segment')">K-12 Education <span style="opacity:0.6;">✕</span></span>
-        <span class="filter-pill" onclick="removeFilterPill(this,'org-filter-states')">TX, CA, FL <span style="opacity:0.6;">✕</span></span>
-        <span class="filter-pill" onclick="removeFilterPill(this,'org-filter-engagement')">High Engagement <span style="opacity:0.6;">✕</span></span>
+        <span class="filter-pill" onclick="removeFilterPill(this,'org-filter-segment')">K-12 Education <span style="opacity:0.6;">â</span></span>
+        <span class="filter-pill" onclick="removeFilterPill(this,'org-filter-states')">TX, CA, FL <span style="opacity:0.6;">â</span></span>
+        <span class="filter-pill" onclick="removeFilterPill(this,'org-filter-engagement')">High Engagement <span style="opacity:0.6;">â</span></span>
         <button class="inline-link" style="margin-left:4px;font-size:12px;" onclick="clearOrgFilters()">Clear all</button>
       </div>
 
@@ -661,11 +661,11 @@
           </div>
           <div>
             <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.04em;">State</div>
-            <select id="org-filter-states" class="filter-chip active-filter" style="width:100%;"><option>3 States ✓</option><option>Texas</option><option>California</option><option>Florida</option></select>
+            <select id="org-filter-states" class="filter-chip active-filter" style="width:100%;"><option>3 States â</option><option>Texas</option><option>California</option><option>Florida</option></select>
           </div>
           <div>
             <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.04em;">Market Segment</div>
-            <select id="org-filter-segment" class="filter-chip active-filter" style="width:100%;"><option>K-12 Education ✓</option><option>K-12 Education</option><option>Higher Education</option><option>Healthcare</option></select>
+            <select id="org-filter-segment" class="filter-chip active-filter" style="width:100%;"><option>K-12 Education â</option><option>K-12 Education</option><option>Higher Education</option><option>Healthcare</option></select>
           </div>
           <div>
             <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.04em;">MS Sub-type</div>
@@ -673,11 +673,11 @@
           </div>
           <div>
             <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.04em;">Size Band</div>
-            <select class="filter-chip" style="width:100%;"><option>All Sizes</option><option>(A) &lt;300K</option><option>(B) 600K–1.2M</option><option>(C) 1.2M–3M</option><option>(D) &gt;3M</option></select>
+            <select class="filter-chip" style="width:100%;"><option>All Sizes</option><option>(A) &lt;300K</option><option>(B) 600Kâ1.2M</option><option>(C) 1.2Mâ3M</option><option>(D) &gt;3M</option></select>
           </div>
           <div>
             <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.04em;">Engagement</div>
-            <select id="org-filter-engagement" class="filter-chip active-filter" style="width:100%;"><option>High ✓</option><option>High</option><option>Medium</option><option>Low</option><option>Idle</option></select>
+            <select id="org-filter-engagement" class="filter-chip active-filter" style="width:100%;"><option>High â</option><option>High</option><option>Medium</option><option>Low</option><option>Idle</option></select>
           </div>
           <div>
             <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.04em;">Capital Projects</div>
@@ -699,11 +699,11 @@
     <!-- Results count + export -->
     <div class="results-toolbar" style="margin-bottom:8px;">
       <div class="results-count-box">
-        10,000 Organizations Displayed — 10,078 Found
+        10,000 Organizations Displayed â 10,078 Found
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
       </div>
       <div class="toolbar-spacer"></div>
-      <button class="btn btn-outline" onclick="showToast('Export started — check your email shortly')">Export</button>
+      <button class="btn btn-outline" onclick="showToast('Export started â check your email shortly')">Export</button>
     </div>
     <div class="data-table-wrap">
       <table class="data-table">
@@ -719,15 +719,15 @@
         </thead>
         <tbody>
           <tr onclick="navigate('org-details')">
-            <td><span class="org-name">All IN Good Taste Catering</span><br><small style="color:var(--text-muted)">Force ID: 866795 · Richardson, TX</small></td>
+            <td><span class="org-name">All IN Good Taste Catering</span><br><small style="color:var(--text-muted)">Force ID: 866795 Â· Richardson, TX</small></td>
             <td>K-12 Education</td>
             <td>TX</td>
             <td><span class="badge badge-yellow">Idle</span></td>
-            <td>(B) 600–1.2K</td>
+            <td>(B) 600â1.2K</td>
             <td>N/A</td>
           </tr>
           <tr onclick="navigate('org-details')">
-            <td><span class="org-name">Austin Independent School District</span><br><small style="color:var(--text-muted)">Force ID: 712340 · Austin, TX</small></td>
+            <td><span class="org-name">Austin Independent School District</span><br><small style="color:var(--text-muted)">Force ID: 712340 Â· Austin, TX</small></td>
             <td>K-12 Education</td>
             <td>TX</td>
             <td><span class="badge badge-green">High</span></td>
@@ -735,15 +735,15 @@
             <td>$240,000</td>
           </tr>
           <tr onclick="navigate('org-details')">
-            <td><span class="org-name">UC San Diego Health System</span><br><small style="color:var(--text-muted)">Force ID: 548921 · San Diego, CA</small></td>
+            <td><span class="org-name">UC San Diego Health System</span><br><small style="color:var(--text-muted)">Force ID: 548921 Â· San Diego, CA</small></td>
             <td>Healthcare</td>
             <td>CA</td>
             <td><span class="badge badge-blue">Medium</span></td>
-            <td>(C) 1.2M–3M</td>
+            <td>(C) 1.2Mâ3M</td>
             <td>$87,500</td>
           </tr>
           <tr onclick="navigate('org-details')">
-            <td><span class="org-name">Miami-Dade County Schools</span><br><small style="color:var(--text-muted)">Force ID: 634100 · Miami, FL</small></td>
+            <td><span class="org-name">Miami-Dade County Schools</span><br><small style="color:var(--text-muted)">Force ID: 634100 Â· Miami, FL</small></td>
             <td>K-12 Education</td>
             <td>FL</td>
             <td><span class="badge badge-green">High</span></td>
@@ -751,43 +751,43 @@
             <td>$510,000</td>
           </tr>
           <tr onclick="navigate('org-details')">
-            <td><span class="org-name">Dallas Area Rapid Transit</span><br><small style="color:var(--text-muted)">Force ID: 789003 · Dallas, TX</small></td>
+            <td><span class="org-name">Dallas Area Rapid Transit</span><br><small style="color:var(--text-muted)">Force ID: 789003 Â· Dallas, TX</small></td>
             <td>State &amp; Local Gov</td>
             <td>TX</td>
             <td><span class="badge badge-red">Low</span></td>
-            <td>(B) 600–1.2K</td>
+            <td>(B) 600â1.2K</td>
             <td>$32,000</td>
           </tr>
           <tr onclick="navigate('org-details')">
-            <td><span class="org-name">Houston Community College</span><br><small style="color:var(--text-muted)">Force ID: 901244 · Houston, TX</small></td>
+            <td><span class="org-name">Houston Community College</span><br><small style="color:var(--text-muted)">Force ID: 901244 Â· Houston, TX</small></td>
             <td>Higher Education</td>
             <td>TX</td>
             <td><span class="badge badge-blue">Medium</span></td>
-            <td>(C) 1.2M–3M</td>
+            <td>(C) 1.2Mâ3M</td>
             <td>$145,000</td>
           </tr>
           <tr onclick="navigate('org-details')">
-            <td><span class="org-name">City of Anaheim</span><br><small style="color:var(--text-muted)">Force ID: 456789 · Anaheim, CA</small></td>
+            <td><span class="org-name">City of Anaheim</span><br><small style="color:var(--text-muted)">Force ID: 456789 Â· Anaheim, CA</small></td>
             <td>State &amp; Local Gov</td>
             <td>CA</td>
             <td><span class="badge badge-green">High</span></td>
-            <td>(C) 1.2M–3M</td>
+            <td>(C) 1.2Mâ3M</td>
             <td>$198,000</td>
           </tr>
           <tr onclick="navigate('org-details')">
-            <td><span class="org-name">Hillsborough County School Board</span><br><small style="color:var(--text-muted)">Force ID: 334512 · Tampa, FL</small></td>
+            <td><span class="org-name">Hillsborough County School Board</span><br><small style="color:var(--text-muted)">Force ID: 334512 Â· Tampa, FL</small></td>
             <td>K-12 Education</td>
             <td>FL</td>
             <td><span class="badge badge-yellow">Idle</span></td>
             <td>(D) &gt;3M</td>
             <td>N/A</td>
           </tr>
-        </tbody>
+        </Tbody>
       </table>
     </div>
   </div>
 
-  <!-- ══════════════════ ORG DETAILS ══════════════════ -->
+  <!-- ââââââââââââââââââ ORG DETAILS ââââââââââââââââââ -->
   <div id="screen-org-details" class="screen">
     <div class="back-btn" onclick="navigate('org-search')">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
@@ -799,9 +799,9 @@
         <div style="font-size:16px;font-weight:700;margin-bottom:10px;">All IN Good Taste Catering</div>
         <div style="font-size:13px;color:var(--text-muted);line-height:1.8;">
           Force ID: 866795<br>
-          TAX ID: —<br>
+          TAX ID: â<br>
           2800 Custer Pkwy, Richardson, TX 75080<br>
-          <span>OMNIA Partners Sales Resource: <a href="#" style="color:var(--blue)">Patrick Garrett</a> — patrick.garrett@omniapartners.com</span>
+          <span>OMNIA Partners Sales Resource: <a href="#" style="color:var(--blue)">Patrick Garrett</a> â patrick.garrett@omniapartners.com</span>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
@@ -818,27 +818,27 @@
       </div>
     </div>
 
-    <!-- ── Contract Activity ── -->
+    <!-- ââ Contract Activity ââ -->
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px;">
       <div class="card" style="text-align:center;">
-        <div class="detail-label" style="margin-bottom:6px;">Your contracts · 12mo</div>
+        <div class="detail-label" style="margin-bottom:6px;">Your contracts Â· 12mo</div>
         <div style="font-size:28px;font-weight:800;color:var(--blue);">3</div>
       </div>
       <div class="card" style="text-align:center;">
-        <div class="detail-label" style="margin-bottom:6px;">Your contracts · 24mo</div>
+        <div class="detail-label" style="margin-bottom:6px;">Your contracts Â· 24mo</div>
         <div style="font-size:28px;font-weight:800;color:var(--blue);">5</div>
       </div>
       <div class="card" style="text-align:center;">
-        <div class="detail-label" style="margin-bottom:6px;">All OMNIA contracts · 12mo</div>
+        <div class="detail-label" style="margin-bottom:6px;">All OMNIA contracts Â· 12mo</div>
         <div style="font-size:28px;font-weight:800;color:var(--blue);">11</div>
       </div>
       <div class="card" style="text-align:center;">
-        <div class="detail-label" style="margin-bottom:6px;">All OMNIA contracts · 24mo</div>
+        <div class="detail-label" style="margin-bottom:6px;">All OMNIA contracts Â· 24mo</div>
         <div style="font-size:28px;font-weight:800;color:var(--blue);">18</div>
       </div>
     </div>
 
-    <!-- ── Seasonal Buying Pattern ── -->
+    <!-- ââ Seasonal Buying Pattern ââ -->
     <div class="card" style="margin-top:16px;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
         <div class="card-title" style="margin:0;">Seasonal buying pattern</div>
@@ -939,7 +939,7 @@
       </div>
     </div>
 
-    <!-- ── Buying Signals ── -->
+    <!-- ââ Buying Signals ââ -->
     <div class="card" style="margin-top:16px;">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
         <div class="card-title" style="margin:0;">Buying signals</div>
@@ -960,14 +960,14 @@
             Declining spend
           </div>
           <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;">Down 31% YoY</div>
-          <div style="font-size:11px;color:var(--text-muted);">$180K → $124K on MA-2022</div>
+          <div style="font-size:11px;color:var(--text-muted);">$180K â $124K on MA-2022</div>
         </div>
         <div style="background:var(--bg);border-radius:var(--radius-sm);padding:12px;border:1px solid var(--border);">
           <div style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px;">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;vertical-align:-1px;margin-right:3px;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             OPUS activity
           </div>
-          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;">$87K LTM · 14 orders</div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;">$87K LTM Â· 14 orders</div>
           <div style="font-size:11px;color:var(--text-muted);">Last order 23 days ago</div>
         </div>
       </div>
@@ -999,7 +999,7 @@
           </div>
           <div class="detail-row">
             <div class="detail-label">Size Band</div>
-            <div class="detail-value">(B) 600 – 1.2K</div>
+            <div class="detail-value">(B) 600 â 1.2K</div>
           </div>
           <div class="detail-row">
             <div class="detail-label">Significant Capital</div>
@@ -1030,7 +1030,7 @@
 
     <div class="details-grid" style="margin-top:16px;">
       <div class="card">
-        <div class="card-title">Member Scored Card — vs. Others in BLOC</div>
+        <div class="card-title">Member Scored Card â vs. Others in BLOC</div>
         <div style="display:flex;gap:20px;margin-top:8px;">
           <div style="flex:1;">
             <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;">Percentile Rank</div>
@@ -1047,7 +1047,7 @@
         <div class="card-title">Member Health Insights</div>
         <div class="detail-row" style="margin-bottom:10px;">
           <div class="detail-label">Temperature</div>
-          <div class="detail-value"><span class="badge badge-yellow">Lukewarm</span> — Low recent activity</div>
+          <div class="detail-value"><span class="badge badge-yellow">Lukewarm</span> â Low recent activity</div>
         </div>
         <div class="detail-row">
           <div class="detail-label">Buying Trends</div>
@@ -1091,7 +1091,7 @@
     </div>
   </div>
 
-  <!-- ══════════════════ CONTRACTS ══════════════════ -->
+  <!-- ââââââââââââââââââ CONTRACTS ââââââââââââââââââ -->
   <div id="screen-contracts" class="screen">
     <div class="back-btn" onclick="navigate('org-details')">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
@@ -1101,29 +1101,29 @@
     <div class="contract-list">
       <div class="contract-item" onclick="navigate('contract-detail')">
         <div>
-          <div class="contract-name">Technology Products &amp; Services — Master Agreement</div>
-          <div class="contract-meta">Contract #: MA-2024-0041 · Expires: Dec 31, 2026 · <span class="badge badge-green">Active</span></div>
+          <div class="contract-name">Technology Products &amp; Services â Master Agreement</div>
+          <div class="contract-meta">Contract #: MA-2024-0041 Â· Expires: Dec 31, 2026 Â· <span class="badge badge-green">Active</span></div>
         </div>
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
       </div>
       <div class="contract-item" onclick="navigate('contract-detail')">
         <div>
-          <div class="contract-name">Office Supplies &amp; Paper Products — National Contract</div>
-          <div class="contract-meta">Contract #: NC-2023-0118 · Expires: Jun 30, 2027 · <span class="badge badge-green">Active</span></div>
+          <div class="contract-name">Office Supplies &amp; Paper Products â National Contract</div>
+          <div class="contract-meta">Contract #: NC-2023-0118 Â· Expires: Jun 30, 2027 Â· <span class="badge badge-green">Active</span></div>
         </div>
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
       </div>
       <div class="contract-item" onclick="navigate('contract-detail')">
         <div>
-          <div class="contract-name">Food Service Equipment — Cooperative Agreement</div>
-          <div class="contract-meta">Contract #: CA-2022-0055 · Expires: Mar 31, 2025 · <span class="badge badge-red">Expired</span></div>
+          <div class="contract-name">Food Service Equipment â Cooperative Agreement</div>
+          <div class="contract-meta">Contract #: CA-2022-0055 Â· Expires: Mar 31, 2025 Â· <span class="badge badge-red">Expired</span></div>
         </div>
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
       </div>
     </div>
   </div>
 
-  <!-- ══════════════════ CONTACT SEARCH ══════════════════ -->
+  <!-- ââââââââââââââââââ CONTACT SEARCH ââââââââââââââââââ -->
   <div id="screen-contact-search" class="screen">
     <div class="back-btn" onclick="navigate('home')">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
@@ -1135,9 +1135,9 @@
         <div class="prefs-question">
           <div class="prefs-question-label">What is your primary goal for this search?</div>
           <div class="prefs-options">
-            <div class="prefs-option selected" onclick="selectPref(this, 'goal-summary', 'New Outreach')">New Outreach — find contacts I haven't engaged yet</div>
-            <div class="prefs-option" onclick="selectPref(this, 'goal-summary', 'Re-engagement')">Re-engagement — reconnect with lapsed contacts</div>
-            <div class="prefs-option" onclick="selectPref(this, 'goal-summary', 'Contract Follow-up')">Contract Follow-up — contacts tied to active contracts</div>
+            <div class="prefs-option selected" onclick="selectPref(this, 'goal-summary', 'New Outreach')">New Outreach â find contacts I haven't engaged yet</div>
+            <div class="prefs-option" onclick="selectPref(this, 'goal-summary', 'Re-engagement')">Re-engagement â reconnect with lapsed contacts</div>
+            <div class="prefs-option" onclick="selectPref(this, 'goal-summary', 'Contract Follow-up')">Contract Follow-up â contacts tied to active contracts</div>
           </div>
         </div>
         <div class="prefs-question">
@@ -1165,12 +1165,12 @@
         <div class="prefs-summary-item" id="goal-summary">New Outreach</div>
         <div class="prefs-summary-item" id="segment-summary">K-12 Education</div>
         <div class="prefs-summary-item" id="col-summary">Default Columns</div>
-        <span class="prefs-goto" onclick="navigate('contact-results')">Go to Contact Search →</span>
+        <span class="prefs-goto" onclick="navigate('contact-results')">Go to Contact Search â</span>
       </div>
     </div>
   </div>
 
-  <!-- ══════════════════ CONTACT RESULTS ══════════════════ -->
+  <!-- ââââââââââââââââââ CONTACT RESULTS ââââââââââââââââââ -->
   <div id="screen-contact-results" class="screen">
     <div class="back-btn" onclick="navigate('contact-search')">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
@@ -1179,14 +1179,14 @@
     <div class="page-title">Contact Search Results</div>
     <div class="results-toolbar">
       <div class="results-count-box">
-        87 Contacts Found — K-12 Education
+        87 Contacts Found â K-12 Education
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
       </div>
       <div class="toolbar-spacer"></div>
       <button class="btn btn-outline" onclick="showToast('Export started')">Export</button>
     </div>
     <div class="filter-chips" style="margin-bottom:16px;">
-      <select class="filter-chip active-filter"><option>K-12 Education ✓</option></select>
+      <select class="filter-chip active-filter"><option>K-12 Education â</option></select>
       <select class="filter-chip"><option>State</option><option>Texas</option><option>California</option><option>Florida</option></select>
       <select class="filter-chip"><option>Department</option><option>Procurement</option><option>Finance</option><option>IT</option></select>
       <select class="filter-chip"><option>Role</option><option>Decision Maker</option><option>Influencer</option></select>
@@ -1207,14 +1207,14 @@
     </div>
   </div>
 
-  <!-- ══════════════════ SAVED SEARCHES ══════════════════ -->
+  <!-- ââââââââââââââââââ SAVED SEARCHES ââââââââââââââââââ -->
   <div id="screen-saved-searches" class="screen">
     <div class="back-btn" onclick="navigate('home')">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
       Back
     </div>
     <div class="page-title">Saved Searches</div>
-    <div class="home-search-box" style="margin-bottom:24px;">
+    <div class="home-search-box">
       <div class="filter-row">
         <select class="filter-select"><option>Organization</option></select>
         <select class="filter-select"><option>Location</option></select>
@@ -1236,8 +1236,8 @@
       </div>
       <div class="saved-item" onclick="navigate('org-search')">
         <div>
-          <div class="saved-item-name">K-12 Texas – High Engagement</div>
-          <div class="saved-item-meta">Organizations · Created Jun 1, 2026 · Last run Jun 14, 2026 · 342 results</div>
+          <div class="saved-item-name">K-12 Texas â High Engagement</div>
+          <div class="saved-item-meta">Organizations Â· Created Jun 1, 2026 Â· Last run Jun 14, 2026 Â· 342 results</div>
         </div>
         <div class="saved-actions">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11A2.99 2.99 0 0018 8c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
@@ -1246,18 +1246,20 @@
       </div>
       <div class="saved-item" onclick="navigate('org-search')">
         <div>
-          <div class="saved-item-name">Healthcare – New Members – Southwest</div>
-          <div class="saved-item-meta">Organizations · Created May 20, 2026 · Last run Jun 10, 2026 · 128 results</div>
+          <div class="saved-item-name">Healthcare â New Members â Southwest</div>
+          <div class="saved-item-meta">Organizations Â· Created May 20, 2026 Â· Last run Jun 10, 2026 Â· 128 results</div>
         </div>
         <div class="saved-actions">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11A2.99 2.99 0 0018 8c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
         </div>
       </div>
+      <di/div>
+      </div>
       <div class="saved-item" onclick="navigate('contact-results')">
         <div>
-          <div class="saved-item-name">Procurement Contacts – California</div>
-          <div class="saved-item-meta">Contacts · Created May 10, 2026 · Last run Jun 5, 2026 · 87 results</div>
+          <div class="saved-item-name">Procurement Contacts â California</div>
+          <div class="saved-item-meta">Contacts Â· Created May 10, 2026 Â· Last run Jun 5, 2026 Â· 87 results</div>
         </div>
         <div class="saved-actions">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11A2.99 2.99 0 0018 8c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
@@ -1267,7 +1269,7 @@
     </div>
   </div>
 
-  <!-- ══════════════════ MEMBERSHIP STATUS ══════════════════ -->
+  <!-- ââââââââââââââââââ MEMBERSHIP STATUS ââââââââââââââââââ -->
   <div id="screen-membership-status" class="screen">
     <div class="back-btn" onclick="navigate('home')">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
@@ -1314,8 +1316,8 @@
               <td>N/A</td>
               <td><span style="color:var(--text-muted)">No match found</span></td>
               <td><span class="badge badge-red">Declined</span></td>
-              <td>—</td>
-              <td>—</td>
+              <td>â</td>
+              <td>â</td>
             </tr>
           </tbody>
         </table>
@@ -1323,7 +1325,7 @@
     </div>
   </div>
 
-  <!-- ══════════════════ ORG SEARCH PREFERENCES ══════════════════ -->
+  <!-- ââââââââââââââââââ ORG SEARCH PREFERENCES ââââââââââââââââââ -->
   <div id="screen-org-search-prefs" class="screen">
     <div class="back-btn" onclick="navigate('sales-compass')">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
@@ -1335,9 +1337,9 @@
         <div class="prefs-question">
           <div class="prefs-question-label">What is your primary sales goal?</div>
           <div class="prefs-options">
-            <div class="prefs-option selected" onclick="selectPref(this, 'org-goal-summary', 'New Prospects')">New Prospects — find organizations not yet using my contract</div>
-            <div class="prefs-option" onclick="selectPref(this, 'org-goal-summary', 'Re-engage Idle Members')">Re-engage Idle Members — orgs that have gone quiet</div>
-            <div class="prefs-option" onclick="selectPref(this, 'org-goal-summary', 'Expand Existing Accounts')">Expand Existing Accounts — grow spend in current members</div>
+            <div class="prefs-option selected" onclick="selectPref(this, 'org-goal-summary', 'New Prospects')">New Prospects â find organizations not yet using my contract</div>
+            <div class="prefs-option" onclick="selectPref(this, 'org-goal-summary', 'Re-engage Idle Members')">Re-engage Idle Members â orgs that have gone quiet</div>
+            <div class="prefs-option" onclick="selectPref(this, 'org-goal-summary', 'Expand Existing Accounts')">Expand Existing Accounts â grow spend in current members</div>
           </div>
         </div>
         <div class="prefs-question">
@@ -1352,15 +1354,15 @@
         <div class="prefs-question">
           <div class="prefs-question-label">What organization size are you targeting?</div>
           <div class="prefs-options">
-            <div class="prefs-option" onclick="selectPref(this, 'org-size-summary', 'Small — under $300K')">Small — under $300K spend</div>
-            <div class="prefs-option selected" onclick="selectPref(this, 'org-size-summary', 'Mid — $600K–$3M')">Mid — $600K to $3M spend</div>
-            <div class="prefs-option" onclick="selectPref(this, 'org-size-summary', 'Large — over $3M')">Large — over $3M spend</div>
+            <div class="prefs-option" onclick="selectPref(this, 'org-size-summary', 'Small â under $300K')">Small â under $300K spend</div>
+            <div class="prefs-option selected" onclick="selectPref(this, 'org-size-summary', 'Mid â $600Kâ$3M')">Mid â $600K to $3M spend</div>
+            <div class="prefs-option" onclick="selectPref(this, 'org-size-summary', 'Large â over $3M')">Large â over $3M spend</div>
             <div class="prefs-option" onclick="selectPref(this, 'org-size-summary', 'All sizes')">All sizes</div>
           </div>
         </div>
         <div class="prefs-question">
           <div class="prefs-question-label">Which engagement levels should we include?</div>
           <div class="prefs-options">
-            <div class="prefs-option selected" onclick="selectPref(this, 'org-engagement-summary', 'Highly Engaged + Active')">Highly Engaged &amp; Active — ready to buy</div>
-            <div class="prefs-option" onclick="selectPref(this, 'org-engagement-summary', 'Somewhat Engaged')">Somewhat Engaged — warming up</div>
+            <div class="prefs-option selected" onclick="selectPref(this, 'org-engagement-summary', 'Highly Engaged + Active')">Highly Engaged &amp; Active â ready to buy</div>
+            <div class="prefs-option" onclick="selectPref(this, 'org-engagement-summary', 'Somewhat Engaged')">Somewhat Engaged â warming up</div>
             <div class="prefs-option" onclick="selectPref(this,
