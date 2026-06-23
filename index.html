@@ -1644,4 +1644,173 @@
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;">
             <span style="font-size:13px;color:var(--text);">Calls initiated via Connect</span>
-            <div style="display:f
+            <div style="display:f            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Program engagement -->
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <div class="card-title" style="margin:0;">Program Engagement</div>
+          <span style="font-size:11px;color:var(--text-muted);background:var(--blue-light);padding:3px 8px;border-radius:12px;">This month</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);">
+            <span style="font-size:13px;color:var(--text);">Training sessions completed</span>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="font-size:15px;font-weight:700;color:var(--text);">2 / 4</span>
+              <span style="font-size:11px;color:#F59E0B;background:#FFFBEB;padding:2px 6px;border-radius:10px;">2 remaining</span>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);">
+            <span style="font-size:13px;color:var(--text);">Marketing materials viewed</span>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="font-size:15px;font-weight:700;color:var(--text);">9</span>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);">
+            <span style="font-size:13px;color:var(--text);">Marketing materials downloaded</span>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="font-size:15px;font-weight:700;color:var(--text);">3</span>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;">
+            <span style="font-size:13px;color:var(--text);">Supplier partner activities</span>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="font-size:15px;font-weight:700;color:var(--text);">3 / 5</span>
+              <span style="font-size:11px;color:#16A34A;background:#F0FDF4;padding:2px 6px;border-radius:10px;">on track</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROI signal bar -->
+    <div style="background:var(--blue-light);border:1.5px solid var(--blue);border-radius:var(--radius);padding:14px 20px;display:flex;align-items:center;gap:14px;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--blue)"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--blue);">ROI Signal: You're performing above benchmark</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Suppliers running 40+ searches/mo close 2.3&times; more contracts on average &nbsp;&middot;&nbsp; You ran <strong>47 searches</strong> this month.</div>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<!-- SHARE DROPDOWN -->
+<div class="share-dropdown" id="shareDropdown">
+  <div class="share-option" onclick="closeShare();showToast('Set as default for all users')">Make Default Search for All Users</div>
+  <div class="share-option" onclick="closeShare();showToast('Set as default for selected users')">Make Default Search for User Selection</div>
+  <div class="share-option" onclick="closeShare();showToast('Made only available for all users')">Make Only Available Search for All Users</div>
+  <div class="share-option" onclick="closeShare();showToast('Made only available for user selection')">Make Only Available Search for User Selection</div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  let currentScreen = 'home';
+  const prevScreens = [];
+
+  const screenNavMap = {
+    'home': 'nav-home',
+    'sales-compass': 'nav-sales-compass',
+    'saved-searches': 'nav-saved-searches',
+    'org-search': 'nav-org-search',
+    'org-search-prefs': 'nav-org-search',
+    'org-details': 'nav-org-search',
+    'contracts': 'nav-org-search',
+    'contract-detail': 'nav-org-search',
+    'contact-search': 'nav-contact-search',
+    'contact-results': 'nav-contact-search',
+    'membership-status': 'nav-membership-status',
+    'supplier-insights': 'nav-supplier-insights',
+  };
+
+  const screenTitles = {
+    'home': 'Supplier Name',
+    'sales-compass': 'Supplier Name',
+    'org-search': 'Supplier Name',
+    'org-search-prefs': 'Supplier Name',
+    'org-details': 'All IN Good Taste Catering',
+    'contracts': 'All IN Good Taste Catering',
+    'contract-detail': 'All IN Good Taste Catering',
+    'contact-search': 'Supplier Name',
+    'contact-results': 'Supplier Name',
+    'saved-searches': 'Supplier Name',
+    'membership-status': 'Supplier Name',
+    'supplier-insights': 'Acme Office Solutions',
+  };
+
+  function navigate(screen) {
+    prevScreens.push(currentScreen);
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    const el = document.getElementById('screen-' + screen);
+    if (el) el.classList.add('active');
+    const navId = screenNavMap[screen];
+    if (navId) document.getElementById(navId)?.classList.add('active');
+    document.getElementById('headerSupplier').textContent = screenTitles[screen] || 'Supplier Name';
+    currentScreen = screen;
+    window.scrollTo(0, 0);
+  }
+
+  function siSetPeriod(period, btn) {
+    document.querySelectorAll('#si-period-toggle button').forEach(b => {
+      b.style.background = 'var(--white)';
+      b.style.color = 'var(--text-muted)';
+    });
+    btn.style.background = 'var(--blue)';
+    btn.style.color = 'var(--white)';
+    showToast('Showing ' + period.charAt(0).toUpperCase() + period.slice(1) + ' view');
+  }
+
+  function goBack() {
+    if (prevScreens.length > 0) {
+      const prev = prevScreens.pop();
+      navigate(prev);
+      prevScreens.pop();
+    }
+  }
+
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  function toggleOrgFilterPanel() {
+    const p = document.getElementById('orgFilterPanel');
+    if (p) p.style.display = p.style.display === 'none' ? 'block' : 'none';
+  }
+
+  function setHeatmapView(view, btn) {
+    document.querySelectorAll('.heatmap-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    showToast('Showing ' + view + ' view');
+  }
+
+  function closeShare() {
+    document.getElementById('shareDropdown').style.display = 'none';
+  }
+
+  // Wire up nav items that don't have inline onclick
+  document.addEventListener('DOMContentLoaded', () => {
+    const navMap = {
+      'nav-home': 'home',
+      'nav-sales-compass': 'sales-compass',
+      'nav-saved-searches': 'saved-searches',
+      'nav-org-search': 'org-search',
+      'nav-contact-search': 'contact-search',
+      'nav-membership-status': 'membership-status',
+      'nav-supplier-insights': 'supplier-insights',
+    };
+  });
+</script>
+</body>
+</html>
